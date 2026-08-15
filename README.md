@@ -31,6 +31,24 @@ npm run dev
 them, and the full stack does not fit comfortably in a 4 GB VM. Re-enable them if you need
 Studio.
 
+## The database is shared
+
+This app's Postgres is the project that also hosts another app in `public`. Everything
+here lives in a `maintenance` schema, the storage bucket is `maintenance-receipts`, and
+the storage policies are prefixed so they cannot collide. The JS client is pinned with
+`db: { schema: 'maintenance' }`.
+
+Two consequences worth knowing:
+
+- `supabase db push` does not work here. The remote migration history contains the other
+  app's migrations, which are not in this repo, so the CLI refuses. Apply migrations with
+  `supabase db query --linked -f supabase/migrations/<file>.sql` instead, in order.
+- `supabase config push` would overwrite the other app's auth and API settings with this
+  repo's `config.toml`. Do not run it against the linked project.
+
+Auth users are shared across both apps, since `auth.users` is per project rather than per
+schema. RLS keeps the data apart regardless.
+
 ## Deploying
 
 GitHub Actions builds on push to `main` and publishes `dist` to Pages. Two repo secrets

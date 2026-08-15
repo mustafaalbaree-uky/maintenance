@@ -11,11 +11,14 @@ if (!url || !anonKey) {
   )
 }
 
+// This project's Postgres is shared with another app that owns `public`. Every table
+// here lives in the `maintenance` schema, so the client is pinned to it.
 export const supabase = createClient(url, anonKey, {
   auth: { persistSession: true, autoRefreshToken: true },
+  db: { schema: 'maintenance' },
 })
 
-export const RECEIPTS_BUCKET = 'receipts'
+export const RECEIPTS_BUCKET = 'maintenance-receipts'
 
 export function receiptPath(userId: string, vehicleId: string, serviceLogId: string) {
   return `${userId}/${vehicleId}/${serviceLogId}.jpg`

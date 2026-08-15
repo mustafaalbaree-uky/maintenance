@@ -2,9 +2,13 @@
 -- templates, watch items copied from templates, the one-off task lists, and the two
 -- warranty rows. Runs as the caller, so RLS still applies.
 
-create or replace function provision_vehicle(p_vehicle_id uuid, p_template_set text default 'g70_33t')
+set search_path = maintenance, public;
+
+create or replace function maintenance.provision_vehicle(p_vehicle_id uuid, p_template_set text default 'g70_33t')
 returns void
 language plpgsql
+-- Pinned so the function resolves its tables the same way however PostgREST calls it.
+set search_path = maintenance, public
 as $fn$
 declare
   v vehicle%rowtype;
@@ -172,4 +176,4 @@ The end date stays blank until a Genesis dealer gives you the original in servic
 end;
 $fn$;
 
-grant execute on function provision_vehicle(uuid, text) to authenticated;
+grant execute on function maintenance.provision_vehicle(uuid, text) to authenticated;

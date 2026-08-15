@@ -1,5 +1,11 @@
 -- Maintenance: core schema.
 -- RLS is enabled on every table in the same statement block that creates it.
+--
+-- Everything lives in its own `maintenance` schema. This project's Postgres is shared
+-- with another app that owns `public`, and the two must not meet.
+
+create schema if not exists maintenance;
+set search_path = maintenance, public;
 
 -- ============ CORE ============
 
@@ -257,7 +263,7 @@ create policy own_child on notification_outbox for all
 -- RLS decides which rows a user may touch. Grants decide whether the role may touch the
 -- table at all, and without them every policy above evaluates to a permission error.
 
-grant usage on schema public to authenticated;
+grant usage on schema maintenance to authenticated;
 
 grant select on maintenance_template, watch_template, symptom_ref to authenticated;
 

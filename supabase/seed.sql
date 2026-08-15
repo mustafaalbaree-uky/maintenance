@@ -1,3 +1,5 @@
+set search_path = maintenance, public;
+
 -- Maintenance: template seed data.
 --
 -- Every interval, dollar figure, mileage window, and causal claim below comes from the
