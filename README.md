@@ -49,6 +49,18 @@ Two consequences worth knowing:
 Auth users are shared across both apps, since `auth.users` is per project rather than per
 schema. RLS keeps the data apart regardless.
 
+Signups are disabled on this project, which is the other app's setting and the right one:
+its public key is in a shipped bundle, so open signups would let anyone register. This app
+has one user, created once with the admin API, and the auth screen offers sign in and
+password reset only. To add a user:
+
+```sh
+curl -s "$SUPABASE_URL/auth/v1/admin/users" \
+  -H "apikey: $SERVICE_ROLE_KEY" -H "Authorization: Bearer $SERVICE_ROLE_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"...","password":"...","email_confirm":true}'
+```
+
 ## Deploying
 
 GitHub Actions builds on push to `main` and publishes `dist` to Pages. Two repo secrets
