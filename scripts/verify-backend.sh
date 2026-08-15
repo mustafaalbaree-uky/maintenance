@@ -4,6 +4,9 @@
 set -uo pipefail
 
 API=${API:-http://127.0.0.1:54321}
+# Tables live in their own schema, so PostgREST needs the profile headers.
+SCHEMA=${SCHEMA:-maintenance}
+PROFILE=(-H "Accept-Profile: $SCHEMA" -H "Content-Profile: $SCHEMA")
 ANON=${ANON:-$(supabase status -o json 2>/dev/null | python3 -c "import sys,json;print(json.load(sys.stdin)['ANON_KEY'])")}
 
 pass=0
@@ -26,7 +29,7 @@ signup() {
     python3 -c "import sys,json;d=json.load(sys.stdin);print(d.get('access_token',''))"
 }
 
-get() { curl -s "$API/rest/v1/$1" -H "apikey: $ANON" -H "Authorization: Bearer $2"; }
+get() { curl -s "$API/rest/v1/$1" -H "apikey: $ANON" -H "Authorization: Bearer $2" "${PROFILE[@]}"; }
 
 STAMP=$(date +%s)
 T1=$(signup "owner${STAMP}@example.com")
@@ -34,14 +37,14 @@ T2=$(signup "other${STAMP}@example.com")
 [ -n "$T1" ] && [ -n "$T2" ] || { echo "signup failed"; exit 1; }
 
 echo "Vehicle and provisioning"
-V=$(curl -s "$API/rest/v1/vehicle" -H "apikey: $ANON" -H "Authorization: Bearer $T1" \
+V=$(curl -s "$API/rest/v1/vehicle" -H "apikey: $ANON" -H "Authorization: Bearer $T1" "${PROFILE[@]}" \
   -H 'Content-Type: application/json' -H 'Prefer: return=representation' \
   -d '{"year":2022,"make":"Genesis","model":"G70","trim":"3.3T AWD","drivetrain":"AWD",
        "purchase_date":"2026-08-15","purchase_odometer":42000,"plan_end_odometer":102000}' |
   python3 -c "import sys,json;d=json.load(sys.stdin);print(d[0]['id'] if isinstance(d,list) and d else '')")
 check "vehicle created" "$([ -n "$V" ] && echo yes || echo no)" "yes"
 
-curl -s "$API/rest/v1/rpc/provision_vehicle" -H "apikey: $ANON" -H "Authorization: Bearer $T1" \
+curl -s "$API/rest/v1/rpc/provision_vehicle" -H "apikey: $ANON" -H "Authorization: Bearer $T1" "${PROFILE[@]}" \
   -H 'Content-Type: application/json' -d "{\"p_vehicle_id\":\"$V\"}" >/dev/null
 
 check "maintenance items (12 universal + 6 g70)" "$(get 'maintenance_item?select=id' "$T1" | jq_len)" "18"
@@ -65,13 +68,13 @@ check "cap_is_total_odometer is null" \
      python3 -c "import sys,json;print(json.load(sys.stdin)[0]['cap_is_total_odometer'])")" "None"
 
 echo "Odometer readings"
-curl -s "$API/rest/v1/odometer_reading" -H "apikey: $ANON" -H "Authorization: Bearer $T1" \
+curl -s "$API/rest/v1/odometer_reading" -H "apikey: $ANON" -H "Authorization: Bearer $T1" "${PROFILE[@]}" \
   -H 'Content-Type: application/json' \
   -d "{\"vehicle_id\":\"$V\",\"reading_date\":\"2026-08-15\",\"miles\":42000}" >/dev/null
 check "reading stored" "$(get 'odometer_reading?select=id' "$T1" | jq_len)" "1"
 
 OTHER_WRITE=$(curl -s -o /dev/null -w '%{http_code}' "$API/rest/v1/odometer_reading" \
-  -H "apikey: $ANON" -H "Authorization: Bearer $T2" -H 'Content-Type: application/json' \
+  -H "apikey: $ANON" -H "Authorization: Bearer $T2" "${PROFILE[@]}" -H 'Content-Type: application/json' \
   -d "{\"vehicle_id\":\"$V\",\"reading_date\":\"2026-08-16\",\"miles\":99999}")
 check "other user cannot write to this vehicle" "$OTHER_WRITE" "403"
 
