@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import { useStore } from '../lib/store'
 import { Button, Card, SectionLabel } from '../components/ui'
 import { longDate } from '../lib/format'
+import { ChangePassword } from './ChangePassword'
 
 export function Settings() {
   const { vehicle, appState, setAppState, session } = useStore()
@@ -48,6 +49,13 @@ export function Settings() {
           >
             Run it again
           </Button>
+        </Card>
+      </div>
+
+      <div className="mt-7">
+        <SectionLabel>Password</SectionLabel>
+        <Card>
+          <ChangePassword />
         </Card>
       </div>
 

@@ -9,6 +9,7 @@ import { History } from './screens/History'
 import { Tasks } from './screens/Tasks'
 import { LogService } from './screens/LogService'
 import { Settings } from './screens/Settings'
+import { FirstRunPassword } from './screens/ChangePassword'
 
 // HashRouter rather than history routing: it is the lower risk choice on GitHub Pages.
 
@@ -59,9 +60,12 @@ function Sidebar() {
 }
 
 function Shell() {
-  const { session, loading, vehicle, appState } = useStore()
+  const { session, loading, vehicle, appState, refresh } = useStore()
 
   if (!session) return <Auth />
+  // Accounts start with an admin issued temporary password.
+  if (session.user.user_metadata?.must_change_password)
+    return <FirstRunPassword onDone={() => void refresh()} />
   if (loading) return <div className="min-h-dvh bg-ink" />
   if (!vehicle) return <VehicleSetup />
   if (!appState?.onboarding_completed_at) return <Onboarding />

@@ -58,8 +58,13 @@ password reset only. To add a user:
 curl -s "$SUPABASE_URL/auth/v1/admin/users" \
   -H "apikey: $SERVICE_ROLE_KEY" -H "Authorization: Bearer $SERVICE_ROLE_KEY" \
   -H 'Content-Type: application/json' \
-  -d '{"email":"...","password":"...","email_confirm":true}'
+  -d '{"email":"...","password":"...","email_confirm":true,
+       "user_metadata":{"must_change_password":true}}'
 ```
+
+`must_change_password` puts the first sign in on a set your own password screen before the
+app is reachable. It is a nudge rather than a control, since a user can clear their own
+metadata. Password changes are also available any time from Settings.
 
 ## Deploying
 
