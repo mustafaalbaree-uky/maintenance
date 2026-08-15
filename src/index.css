@@ -1,0 +1,110 @@
+@import 'tailwindcss';
+
+/* Archivo variable, width axis used to separate roles. No monospace anywhere. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap');
+
+@theme {
+  --color-ink: #0b0d10;
+  --color-panel: #14171c;
+  --color-panel-hi: #1a1e25;
+  --color-line: #232830;
+  --color-line-soft: #1a1e25;
+
+  --color-text: #edeff2;
+  --color-text-2: #9ba3ae;
+  --color-text-3: #646c78;
+
+  --color-action: #e6e9ed;
+  --color-action-ink: #0b0d10;
+
+  --color-overdue: #d4564c;
+  --color-soon: #c99a3e;
+  --color-clear: #46a886;
+
+  --font-sans: 'Archivo', system-ui, sans-serif;
+}
+
+/* Dark only, on purpose. There is no light theme. */
+html {
+  background: var(--color-ink);
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: var(--color-text);
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums lining;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Type roles from the scale. Width axis is what makes the odometer read as an
+   instrument rather than a number in a card, so it is spent there and nowhere else. */
+.t-odometer {
+  font-variation-settings: 'wdth' 112, 'wght' 500;
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.t-title {
+  font-variation-settings: 'wdth' 100, 'wght' 500;
+  font-size: 24px;
+  line-height: 1.25;
+}
+.t-card-title {
+  font-variation-settings: 'wdth' 100, 'wght' 500;
+  font-size: 15px;
+  line-height: 1.35;
+}
+.t-body {
+  font-variation-settings: 'wdth' 100, 'wght' 400;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.t-support {
+  font-variation-settings: 'wdth' 100, 'wght' 400;
+  font-size: 13px;
+  color: var(--color-text-2);
+}
+.t-section {
+  font-variation-settings: 'wdth' 100, 'wght' 500;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-3);
+}
+.t-wordmark {
+  font-variation-settings: 'wdth' 88, 'wght' 500;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--color-text);
+}
+.t-figure {
+  font-variation-settings: 'wdth' 100, 'wght' 500;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums lining;
+}
+
+/* Focus rings are the only shadow in the app. */
+:focus-visible {
+  outline: 2px solid var(--color-action);
+  outline-offset: 2px;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
