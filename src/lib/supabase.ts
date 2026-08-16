@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { durableSessionStorage } from './session-storage'
 
 const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
@@ -23,6 +24,9 @@ export const supabase = createClient(url, anonKey, {
     persistSession: true,
     autoRefreshToken: true,
     storageKey: 'maintenance-auth',
+    // localStorage alone does not survive iOS, which signs him out on every launch from
+    // the Home Screen. This keeps the session in IndexedDB with localStorage as a mirror.
+    storage: durableSessionStorage,
   },
   db: { schema: 'maintenance' },
 })

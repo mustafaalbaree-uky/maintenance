@@ -68,7 +68,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setAuthReady(true)
     })
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
-    return () => sub.subscription.unsubscribe()
+
+    // A Home Screen app is suspended rather than closed, so the refresh timer may not
+    // have run while it was away. Ask for the session again when it comes back.
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') {
+        void supabase.auth.getSession().then(({ data }) => setSession(data.session))
+      }
+    }
+    document.addEventListener('visibilitychange', onVisible)
+
+    return () => {
+      sub.subscription.unsubscribe()
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [])
 
   const refresh = useCallback(async () => {
