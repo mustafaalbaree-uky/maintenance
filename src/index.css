@@ -223,6 +223,9 @@ html {
    Home Screen launch draws the page underneath the clock, the battery, and the home
    indicator. These insets are zero in a normal browser tab and on desktop. */
 
+/* With the status bar style set to `black`, iOS reserves the top strip itself and this
+   inset is zero. It is kept for the cases where the inset is real: landscape on a notched
+   phone, and any browser that does hand back a top inset. */
 body {
   padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);

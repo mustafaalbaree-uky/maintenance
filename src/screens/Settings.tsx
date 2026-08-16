@@ -90,6 +90,8 @@ export function Settings() {
         </Card>
       </div>
 
+      <p className="t-support mt-7 text-text-3">Build {__BUILD_ID__}</p>
+
       {session?.user.user_metadata?.is_tester ? (
         <div className="mt-7">
           <SectionLabel>Testing</SectionLabel>
