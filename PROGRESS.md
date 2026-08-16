@@ -27,7 +27,14 @@ Last updated: 16 Aug 2026.
   auth and API settings with this repo's `config.toml`.
 - **Never run the CLI's suggested `migration repair --status reverted`.** It would corrupt
   mailbox's history.
-- `auth.users` is shared. RLS keeps the data apart.
+- `auth.users` is shared, so a mailbox login is a valid login here. Membership in
+  `maintenance.app_member` is what actually grants access, and the `vehicle` policy checks
+  it. Add someone with an insert into that table.
+- **Both apps are served from the same github.io origin**, so they would share one
+  localStorage session slot. The client sets `storageKey: 'maintenance-auth'` to prevent
+  that, and signs out with `scope: 'local'` so it cannot end the other app's session.
+- `service_role` needs its own grants on this schema. Only `authenticated` had them at
+  first, which silently refused every admin script before RLS was even consulted.
 - Signups are disabled on the project, correctly: mailbox's public key ships in a bundle.
   Accounts are created with the admin API. See README for the call.
 - The `maintenance` schema had to be added to Exposed schemas in the dashboard.
@@ -132,16 +139,21 @@ The chosen notification channel, multi user. Not planned.
 npm test                          # 32 unit tests, projection and schedule
 ./scripts/verify-backend.sh       # provisioning and RLS, needs API and ANON env for remote
 node scripts/check-auth-gate.mjs  # signed out visitor is held at sign in, phone and desktop
+SVC=<service_role_key> node scripts/smoke-ui.mjs   # walks every screen, both widths
 ```
+
+`smoke-ui.mjs` creates a throwaway account, screenshots every screen to `/tmp/ui-*.png`,
+then deletes the account and its rows. It never uses a real password: the session is
+injected from an admin issued token. If it exits early the account survives, so check
+`auth.users` for `uismoke%` leftovers.
 
 The auth gate check runs Playwright against the deployed site with clean storage, and
 covers deep links.
 
 ## Known gaps
 
-- Most UI work has never been seen in a browser by the person who wrote it. The Chrome
-  extension has not responded across the whole session. Playwright is installed now and is
-  the way to check.
+- The Chrome extension never responded this session. Playwright is the way to look at
+  this app now, through the two scripts above.
 - No screen yet lets you attach a photo to a receipt that was saved without one.
 - The dryness of the visual design was only half addressed. Motion is now optional; the
   layout and hierarchy pass has not been done.
