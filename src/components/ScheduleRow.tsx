@@ -64,14 +64,20 @@ export function ScheduleRow({ entry }: { entry: ScheduleEntry }) {
             {STATUS_WORD[entry.status]}
           </span>
           <span className="t-support text-text-3">
-            {entry.dueAtMiles != null
-              ? `at ${entry.dueAtMiles.toLocaleString('en-US')} miles`
-              : entry.dueAtDate
-                ? `by ${longDate(entry.dueAtDate)}`
-                : ''}
+            {(() => {
+              const past = entry.status === 'overdue'
+              if (entry.dueAtMiles != null) {
+                const at = `${entry.dueAtMiles.toLocaleString('en-US')} miles`
+                return past ? `was due at ${at}` : `at ${at}`
+              }
+              if (entry.dueAtDate) {
+                return past ? `was due ${longDate(entry.dueAtDate)}` : `by ${longDate(entry.dueAtDate)}`
+              }
+              return ''
+            })()}
           </span>
         </div>
-        <div className="expandable" data-open={open}>
+        <div className="expandable" data-open={open} aria-hidden={!open}>
           <div>
             <div className="mt-3 flex flex-col gap-2">
               <p className="t-body text-text-2">{item.plain_language}</p>

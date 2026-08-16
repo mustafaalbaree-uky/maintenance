@@ -119,6 +119,8 @@ export function remainingLabel(
     return `in about ${miles(Math.round(milesRemaining / 100) * 100)} miles`
   }
   if (daysRemaining != null) {
+    if (daysRemaining === 0) return 'today'
+    if (daysRemaining === 1) return 'tomorrow'
     if (daysRemaining <= 45) return `in about ${daysRemaining} days`
     return `around ${monthYear(addDaysDisplay(daysRemaining))}`
   }

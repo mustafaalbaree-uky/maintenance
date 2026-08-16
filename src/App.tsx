@@ -77,7 +77,7 @@ function Shell() {
     <div className="flex min-h-dvh">
       <Sidebar />
       <div className="flex min-h-dvh flex-1 flex-col">
-        <main className="mx-auto w-full max-w-2xl flex-1">
+        <main className="mx-auto w-full max-w-2xl flex-1 pb-6 lg:pb-0">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/coming-up" element={<ComingUp />} />

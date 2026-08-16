@@ -165,25 +165,26 @@ export function Gauge({
         )
       })}
 
-      {/* The car sits under the needle sweep: a G70 in silhouette, three quarter rear.
-          Drawn rather than photographed, so it stays quiet at any size. */}
-      <g transform={`translate(150, 108) scale(${width / 300})`} opacity="0.5">
+      {/* The car sits inside the sweep, in profile, well above the hub so the needle does
+          not cut through it. Line work rather than a filled blob, which at this size read
+          as a smudge. */}
+      <g
+        transform="translate(150, 86) scale(0.82)"
+        fill="none"
+        stroke="var(--color-text-3)"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      >
+        <path d="M -30 6 L -26 6 M -12 6 L 12 6 M 26 6 L 30 6" />
         <path
-          d="M -34 8 C -34 2, -30 -1, -25 -2 L -18 -9 C -15 -12, -11 -13, -7 -13 L 8 -13
-             C 13 -13, 17 -11, 20 -8 L 27 -2 C 32 -1, 34 2, 34 7 L 34 10
-             C 34 12, 32 13, 30 13 L -30 13 C -32 13, -34 12, -34 10 Z"
-          fill="var(--color-panel-hi)"
-          stroke="var(--color-line)"
-          strokeWidth="1"
+          d="M -30 6 C -31 1, -29 -2, -24 -3 L -15 -10 C -12 -12, -9 -13, -5 -13
+             L 6 -13 C 10 -13, 13 -12, 16 -9 L 23 -3 C 28 -2, 31 1, 30 6"
         />
-        {/* Glasshouse */}
-        <path
-          d="M -16 -8 C -13 -11, -10 -11.5, -6 -11.5 L 7 -11.5 C 11 -11.5, 14 -10, 17 -7 Z"
-          fill="var(--color-ink)"
-          opacity="0.8"
-        />
-        <circle cx="-19" cy="13" r="5" fill="var(--color-ink)" stroke="var(--color-line)" strokeWidth="1" />
-        <circle cx="19" cy="13" r="5" fill="var(--color-ink)" stroke="var(--color-line)" strokeWidth="1" />
+        <path d="M -14 -4 L -9 -10 C -7 -11.5, -5 -11.5, -3 -11.5 L -3 -4 Z" />
+        <path d="M 1 -4 L 1 -11.5 L 5 -11.5 C 8 -11.5, 10 -10.5, 12 -8.5 L 15 -4 Z" />
+        <circle cx="-19" cy="6" r="6.5" />
+        <circle cx="19" cy="6" r="6.5" />
       </g>
 
       <line
