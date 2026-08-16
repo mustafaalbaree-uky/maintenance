@@ -145,3 +145,17 @@ describe('dateAtMiles', () => {
     expect(dateAtMiles(e, TODAY, 41000)).toBeNull()
   })
 })
+
+describe('the purchase point as a fallback', () => {
+  // A vehicle with no readings is not a car at zero miles. The store substitutes the
+  // purchase odometer, which is a real measurement sitting on the vehicle row.
+  it('projects from the purchase point when it is the only thing known', () => {
+    const e = estimateOdometer([{ reading_date: '2026-07-16', miles: 42000 }], TODAY)
+    expect(e.odometer).toBe(42990)
+    expect(e.rate.confidence).toBe('default')
+  })
+
+  it('still reports zero only when there is genuinely nothing', () => {
+    expect(estimateOdometer([], TODAY).odometer).toBe(0)
+  })
+})

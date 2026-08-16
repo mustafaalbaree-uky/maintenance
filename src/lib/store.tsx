@@ -18,6 +18,8 @@ import type {
 
 interface Store {
   session: Session | null
+  /** False until the stored session has been read, so nothing renders on a guess. */
+  authReady: boolean
   loading: boolean
   vehicle: Vehicle | null
   readings: OdometerReading[]
@@ -43,6 +45,7 @@ export function useStore() {
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
+  const [authReady, setAuthReady] = useState(false)
   const [loading, setLoading] = useState(true)
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
   const [readings, setReadings] = useState<OdometerReading[]>([])
@@ -54,7 +57,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [appState, setAppStateRow] = useState<AppState | null>(null)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session))
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      setAuthReady(true)
+    })
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
     return () => sub.subscription.unsubscribe()
   }, [])
@@ -111,10 +117,22 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [session, appState],
   )
 
-  const estimate = useMemo(
-    () => estimateOdometer(readings.map((r) => ({ reading_date: r.reading_date, miles: r.miles })), today()),
-    [readings],
-  )
+  /**
+   * With no readings on file the car is not at zero miles: it is at whatever the
+   * odometer read on the day it was bought, which is on the vehicle row. Falling back to
+   * that keeps the gauge honest until the first real reading arrives.
+   */
+  const effectiveReadings = useMemo(() => {
+    if (readings.length) {
+      return readings.map((r) => ({ reading_date: r.reading_date, miles: r.miles }))
+    }
+    if (vehicle) {
+      return [{ reading_date: vehicle.purchase_date, miles: vehicle.purchase_odometer }]
+    }
+    return []
+  }, [readings, vehicle])
+
+  const estimate = useMemo(() => estimateOdometer(effectiveReadings, today()), [effectiveReadings])
 
   const schedule = useMemo(
     () => buildSchedule(items, logs, estimate, today()),
@@ -123,6 +141,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const value: Store = {
     session,
+    authReady,
     loading,
     vehicle,
     readings,

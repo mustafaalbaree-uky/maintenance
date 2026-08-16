@@ -182,3 +182,38 @@ input[type='number']::-webkit-inner-spin-button {
   .enter, .sheet-panel, .sheet-scrim { animation: none !important; }
   .expandable { transition: none !important; }
 }
+
+/* ============ iOS zoom ============
+   Safari zooms the page whenever a focused field renders text under 16px, and it does not
+   zoom back out. The type scale wanted 14px inputs, which is exactly the trigger, so form
+   controls are pinned at 16px. Everything else keeps the scale.
+
+   Pinch zoom stays available on purpose. Disabling it through the viewport tag is both
+   ignored by modern Safari and hostile to anyone who needs to magnify something. */
+
+/* `:not([type='file'])` also raises specificity above a single utility class, so a type
+   scale class on a field cannot quietly reintroduce the zoom. File pickers open a sheet
+   rather than a keyboard, so they never trigger it and keep their smaller label. */
+input:not([type='file']),
+select,
+textarea {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/* Stops the double tap that would otherwise zoom, without touching pinch. */
+button,
+a,
+label,
+input,
+select,
+textarea,
+[role='button'] {
+  touch-action: manipulation;
+}
+
+html {
+  /* Keeps Safari from inflating text when the phone turns landscape. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}

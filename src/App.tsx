@@ -60,8 +60,11 @@ function Sidebar() {
 }
 
 function Shell() {
-  const { session, loading, vehicle, appState, refresh } = useStore()
+  const { session, authReady, loading, vehicle, appState, refresh } = useStore()
 
+  // Until the stored session has been read, showing either the app or the sign in screen
+  // would be a guess, and the wrong guess flashes a screen the person should not see.
+  if (!authReady) return <div className="min-h-dvh bg-ink" />
   if (!session) return <Auth />
   // Accounts start with an admin issued temporary password.
   if (session.user.user_metadata?.must_change_password)
