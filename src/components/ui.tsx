@@ -58,8 +58,10 @@ export function Button({
   className = '',
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'secondary' }) {
+  // 52px tall rather than the 44px minimum. At the minimum they read as flat next to the
+  // cards, and a thumb reaching the bottom of the screen wants the extra height.
   const base =
-    'rounded-[10px] px-4 py-[11px] t-card-title transition-opacity duration-[120ms] disabled:opacity-40'
+    'min-h-[52px] rounded-[12px] px-5 py-[15px] t-card-title transition-opacity duration-[120ms] disabled:opacity-40'
   const style =
     variant === 'primary'
       ? 'bg-action text-action-ink hover:opacity-90'

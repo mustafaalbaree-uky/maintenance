@@ -105,7 +105,7 @@ export function Home() {
         </Link>
       </div>
 
-      <div className="enter enter-3 mt-7 flex gap-2">
+      <div className="enter enter-3 mt-8 flex gap-3">
         <Button className="flex-1" onClick={() => setSheetOpen(true)}>
           Add reading
         </Button>
@@ -113,7 +113,7 @@ export function Home() {
           variant="secondary"
           aria-label="Log a service"
           onClick={() => navigate('/log')}
-          className="px-4"
+          className="flex-1"
         >
           Log a service
         </Button>
