@@ -93,7 +93,7 @@ export function ChangePassword({
 /** Full screen version, shown before the app is reachable on a first sign in. */
 export function FirstRunPassword({ onDone }: { onDone: () => void }) {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-4">
+    <div className="mx-auto flex min-h-safe max-w-sm flex-col justify-center px-4">
       <p className="t-wordmark mb-8">Maintenance</p>
       <ChangePassword first onDone={onDone} />
     </div>

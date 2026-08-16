@@ -23,7 +23,7 @@ const TABS = [
 
 function TabBar() {
   return (
-    <nav className="sticky bottom-0 z-10 grid grid-cols-4 border-t border-line bg-ink lg:hidden">
+    <nav className="tab-bar sticky bottom-0 z-10 grid grid-cols-4 border-t border-line bg-ink lg:hidden">
       {TABS.map((t) => (
         <NavLink
           key={t.to}
@@ -65,21 +65,21 @@ function Shell() {
 
   // Until the stored session has been read, showing either the app or the sign in screen
   // would be a guess, and the wrong guess flashes a screen the person should not see.
-  if (!authReady) return <div className="min-h-dvh bg-ink" />
+  if (!authReady) return <div className="min-h-safe bg-ink" />
   if (!session) return <Auth />
   // Accounts start with an admin issued temporary password.
   if (session.user.user_metadata?.must_change_password)
     return <FirstRunPassword onDone={() => void refresh()} />
-  if (loading || isMember === null) return <div className="min-h-dvh bg-ink" />
+  if (loading || isMember === null) return <div className="min-h-safe bg-ink" />
   // A mailbox account is a valid login on this shared project, but not a member here.
   if (!isMember) return <NotAMember />
   if (!vehicle) return <VehicleSetup />
   if (!appState?.onboarding_completed_at) return <Onboarding />
 
   return (
-    <div className="flex min-h-dvh">
+    <div className="flex min-h-safe">
       <Sidebar />
-      <div className="flex min-h-dvh flex-1 flex-col">
+      <div className="flex min-h-safe flex-1 flex-col">
         <main className="mx-auto w-full max-w-2xl flex-1 pb-6 lg:pb-0">
           <Routes>
             <Route path="/" element={<Home />} />

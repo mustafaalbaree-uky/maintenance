@@ -41,7 +41,7 @@ export function Auth() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-4">
+    <div className="mx-auto flex min-h-safe max-w-sm flex-col justify-center px-4">
       <p className="t-wordmark mb-8">Maintenance</p>
       <h1 className="t-title mb-1">{mode === 'signin' ? 'Sign in' : 'Reset your password'}</h1>
       <p className="t-support mb-6">

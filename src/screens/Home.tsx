@@ -122,7 +122,7 @@ export function Home() {
       {sheetOpen ? (
         <div className="sheet-scrim fixed inset-0 z-20 flex items-end bg-black/60" onClick={() => setSheetOpen(false)}>
           <div
-            className="sheet-panel w-full rounded-t-[14px] border-t border-line bg-panel px-4 pb-8 pt-5"
+            className="sheet-panel w-full rounded-t-[14px] border-t border-line bg-panel px-4 pt-5"
             onClick={(e) => e.stopPropagation()}
           >
             <SectionLabel>Add reading</SectionLabel>

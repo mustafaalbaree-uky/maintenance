@@ -6,7 +6,7 @@ import { Button } from '../components/ui'
 import { OdometerEntry } from '../components/OdometerEntry'
 import { LogServiceForm } from './LogService'
 
-// Ten cards, shown once after signup, before the app is reachable. The tutorial is not
+// Twelve cards, shown once, before the app is reachable. The tutorial is not
 // decorative: by the end he has entered his odometer and seen his first-week list.
 
 /** Routes that exist today. Phase 2 adds /timeline, /symptoms, and /budget. */
@@ -60,7 +60,7 @@ export function Onboarding() {
 
   return (
     <div
-      className="mx-auto flex min-h-dvh max-w-md flex-col px-4 py-6"
+      className="mx-auto flex min-h-safe max-w-md flex-col px-4 py-6"
       onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
       onTouchEnd={(e) => {
         if (touchStart == null) return

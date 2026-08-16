@@ -188,8 +188,8 @@ input[type='number']::-webkit-inner-spin-button {
    zoom back out. The type scale wanted 14px inputs, which is exactly the trigger, so form
    controls are pinned at 16px. Everything else keeps the scale.
 
-   Pinch zoom stays available on purpose. Disabling it through the viewport tag is both
-   ignored by modern Safari and hostile to anyone who needs to magnify something. */
+   Page zoom is held at 1x by lock-zoom.ts, at the owner's request. The system wide
+   accessibility zoom is untouched. */
 
 /* `:not([type='file'])` also raises specificity above a single utility class, so a type
    scale class on a field cannot quietly reintroduce the zoom. File pickers open a sheet
@@ -216,4 +216,31 @@ html {
   /* Keeps Safari from inflating text when the phone turns landscape. */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+
+/* ============ Safe areas ============
+   The status bar style is black-translucent and the viewport is viewport-fit=cover, so a
+   Home Screen launch draws the page underneath the clock, the battery, and the home
+   indicator. These insets are zero in a normal browser tab and on desktop. */
+
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.tab-bar {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* A sheet is fixed to the viewport rather than inside the padded body, so it carries its
+   own inset. */
+.sheet-panel {
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+}
+
+/* A full height screen has to subtract the padding the body now carries, or every one of
+   them ends up taller than the viewport and scrolls for no reason. */
+.min-h-safe {
+  min-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 }
