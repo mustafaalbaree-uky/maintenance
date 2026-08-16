@@ -219,13 +219,11 @@ html {
 }
 
 /* ============ Safe areas ============
-   The status bar style is black-translucent and the viewport is viewport-fit=cover, so a
-   Home Screen launch draws the page underneath the clock, the battery, and the home
-   indicator. These insets are zero in a normal browser tab and on desktop. */
+   The viewport is deliberately not `viewport-fit=cover`, so iOS keeps the web view inside
+   the safe area and nothing draws under the clock or the home indicator. That makes these
+   insets zero almost everywhere, which is the intended state. They stay for the browsers
+   that do report one, and cost nothing when they do not. */
 
-/* With the status bar style set to `black`, iOS reserves the top strip itself and this
-   inset is zero. It is kept for the cases where the inset is real: landscape on a notched
-   phone, and any browser that does hand back a top inset. */
 body {
   padding-top: env(safe-area-inset-top);
   padding-left: env(safe-area-inset-left);

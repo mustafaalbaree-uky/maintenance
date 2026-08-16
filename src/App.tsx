@@ -23,7 +23,7 @@ const TABS = [
 
 function TabBar() {
   return (
-    <nav className="tab-bar sticky bottom-0 z-10 grid grid-cols-4 border-t border-line bg-ink lg:hidden">
+    <nav className="tab-bar fixed inset-x-0 bottom-0 z-10 grid grid-cols-4 border-t border-line bg-ink lg:hidden">
       {TABS.map((t) => (
         <NavLink
           key={t.to}
@@ -80,7 +80,7 @@ function Shell() {
     <div className="flex min-h-safe">
       <Sidebar />
       <div className="flex min-h-safe flex-1 flex-col">
-        <main className="mx-auto w-full max-w-2xl flex-1 pb-6 lg:pb-0">
+        <main className="mx-auto w-full max-w-2xl flex-1 pb-28 lg:pb-6">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/coming-up" element={<ComingUp />} />
