@@ -26,6 +26,14 @@ export function VehicleSetup() {
       return
     }
 
+    // A second car here is always a mistake: this app is built for one. Without this,
+    // a double tap or a back navigation produced two, and both schedules rendered at once.
+    const { data: existing } = await supabase.from('vehicle').select('id').limit(1)
+    if (existing?.length) {
+      await refresh()
+      return
+    }
+
     const { data, error: insertError } = await supabase
       .from('vehicle')
       .insert({

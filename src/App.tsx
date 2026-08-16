@@ -9,6 +9,7 @@ import { History } from './screens/History'
 import { Tasks } from './screens/Tasks'
 import { LogService } from './screens/LogService'
 import { Settings } from './screens/Settings'
+import { NotAMember } from './screens/NotAMember'
 import { FirstRunPassword } from './screens/ChangePassword'
 
 // HashRouter rather than history routing: it is the lower risk choice on GitHub Pages.
@@ -60,7 +61,7 @@ function Sidebar() {
 }
 
 function Shell() {
-  const { session, authReady, loading, vehicle, appState, refresh } = useStore()
+  const { session, authReady, isMember, loading, vehicle, appState, refresh } = useStore()
 
   // Until the stored session has been read, showing either the app or the sign in screen
   // would be a guess, and the wrong guess flashes a screen the person should not see.
@@ -69,7 +70,9 @@ function Shell() {
   // Accounts start with an admin issued temporary password.
   if (session.user.user_metadata?.must_change_password)
     return <FirstRunPassword onDone={() => void refresh()} />
-  if (loading) return <div className="min-h-dvh bg-ink" />
+  if (loading || isMember === null) return <div className="min-h-dvh bg-ink" />
+  // A mailbox account is a valid login on this shared project, but not a member here.
+  if (!isMember) return <NotAMember />
   if (!vehicle) return <VehicleSetup />
   if (!appState?.onboarding_completed_at) return <Onboarding />
 

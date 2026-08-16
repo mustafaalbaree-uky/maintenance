@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { signOut } from '../lib/supabase'
 import { useStore } from '../lib/store'
 import { Button, Card, SectionLabel } from '../components/ui'
 import { longDate } from '../lib/format'
@@ -83,7 +83,7 @@ export function Settings() {
           <Button
             variant="secondary"
             className="mt-3"
-            onClick={() => void supabase.auth.signOut()}
+            onClick={() => void signOut()}
           >
             Sign out
           </Button>

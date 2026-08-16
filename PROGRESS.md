@@ -102,6 +102,21 @@ The chosen notification channel, multi user. Not planned.
 
 ## Bugs found and fixed
 
+- **The two apps shared one login.** Both are served from the same github.io origin and
+  point at the same Supabase project, so supabase-js defaulted both to
+  `sb-<ref>-auth-token`: one localStorage slot for two apps. Signing into mailbox signed
+  you into Maintenance. Fixed with `storageKey: 'maintenance-auth'`. Sign out is also
+  scoped `local` now, because the default revokes every refresh token the user holds and
+  would sign them out of mailbox too.
+- **Any mailbox account could use this app.** Owning a row was the only requirement.
+  There is now an `app_member` table, checked inside the `vehicle` RLS policy, so the
+  database refuses non members. Non members get an explaining screen rather than an empty
+  app. Add someone with an insert into `maintenance.app_member`.
+- **Two cars, one merged schedule.** Child queries relied on RLS to scope rows, which
+  scopes them to the *user*, not to the car being shown. An account with two vehicles saw
+  every item twice. Queries now filter on `vehicle_id`, vehicle setup refuses to make a
+  second car, and `provision_vehicle` returns quietly if the car is already set up.
+
 - "Nothing's due. Leather conditioning in about 0 miles." A time based item has no
   mileage, and the empty state asked for its miles anyway. Pinned by tests.
 - A vehicle with no readings showed 0 miles. It now falls back to the purchase odometer,

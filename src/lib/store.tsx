@@ -21,6 +21,8 @@ interface Store {
   session: Session | null
   /** False until the stored session has been read, so nothing renders on a guess. */
   authReady: boolean
+  /** Null while unknown. False means a valid login that this app does not serve. */
+  isMember: boolean | null
   loading: boolean
   vehicle: Vehicle | null
   readings: OdometerReading[]
@@ -58,6 +60,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [watchItems, setWatchItems] = useState<WatchItem[]>([])
   const [warranties, setWarranties] = useState<Warranty[]>([])
   const [appState, setAppStateRow] = useState<AppState | null>(null)
+  const [isMember, setIsMember] = useState<boolean | null>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -71,9 +74,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const refresh = useCallback(async () => {
     if (!session) {
       setLoading(false)
+      setIsMember(null)
       return
     }
     setLoading(true)
+
+    // The database enforces this too. Reading it here is only so the app can say why.
+    const { data: membership } = await supabase
+      .from('app_member')
+      .select('user_id')
+      .maybeSingle()
+    setIsMember(Boolean(membership))
 
     const { data: vehicles } = await supabase
       .from('vehicle')
@@ -89,13 +100,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     if (v) {
       const [r, i, l, rc, t, w, wa] = await Promise.all([
-        supabase.from('odometer_reading').select('*').order('reading_date'),
-        supabase.from('maintenance_item').select('*').order('sort_order'),
-        supabase.from('service_log').select('*').order('performed_on', { ascending: false }),
-        supabase.from('receipt').select('*').order('performed_on', { ascending: false }),
-        supabase.from('task').select('*').order('sort_order'),
-        supabase.from('watch_item').select('*').order('window_start_miles'),
-        supabase.from('warranty').select('*'),
+        supabase.from('odometer_reading').select('*').eq('vehicle_id', v.id).order('reading_date'),
+        supabase.from('maintenance_item').select('*').eq('vehicle_id', v.id).order('sort_order'),
+        supabase
+          .from('service_log')
+          .select('*')
+          .eq('vehicle_id', v.id)
+          .order('performed_on', { ascending: false }),
+        supabase
+          .from('receipt')
+          .select('*')
+          .eq('vehicle_id', v.id)
+          .order('performed_on', { ascending: false }),
+        supabase.from('task').select('*').eq('vehicle_id', v.id).order('sort_order'),
+        supabase.from('watch_item').select('*').eq('vehicle_id', v.id).order('window_start_miles'),
+        supabase.from('warranty').select('*').eq('vehicle_id', v.id),
       ])
       setReadings((r.data as OdometerReading[]) ?? [])
       setItems((i.data as MaintenanceItem[]) ?? [])
@@ -147,6 +166,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value: Store = {
     session,
     authReady,
+    isMember,
     loading,
     vehicle,
     readings,

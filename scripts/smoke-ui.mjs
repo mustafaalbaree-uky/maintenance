@@ -53,6 +53,12 @@ const session = await fetch(`${API}/auth/v1/token?grant_type=password`, {
   body: JSON.stringify({ email, password }),
 }).then((r) => r.json())
 
+// Membership is enforced in the database, so the throwaway account needs one.
+await admin('/rest/v1/app_member', {
+  method: 'POST',
+  body: JSON.stringify({ user_id: userId, note: 'ui smoke test' }),
+})
+
 // Give it a car so the app has something to render.
 const vehicle = await fetch(`${API}/rest/v1/vehicle`, {
   method: 'POST',
@@ -140,11 +146,12 @@ for (const vp of [
   page.on('pageerror', (e) => errors.push(String(e)))
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
 
-  // supabase-js reads its session from this key on load.
+  // The app uses its own storage key so it cannot share a session with the other app on
+  // this origin. Injecting under the default key would leave it signed out.
   await page.goto(SITE)
   await page.evaluate(
     ([key, value]) => localStorage.setItem(key, value),
-    [`sb-${REF}-auth-token`, JSON.stringify(session)],
+    ['maintenance-auth', JSON.stringify(session)],
   )
 
   for (const [route, label] of [
@@ -172,14 +179,21 @@ for (const vp of [
 await browser.close()
 
 console.log('\nCleaning up…')
-await fetch(`${API}/rest/v1/vehicle?id=eq.${vehicleId}`, {
-  method: 'DELETE',
-  headers: {
-    apikey: SVC,
-    Authorization: `Bearer ${SVC}`,
-    'Content-Profile': SCHEMA,
-  },
-})
+// Order matters: rows referencing the user block the account delete, which fails as a 500.
+for (const path of [
+  `app_state?user_id=eq.${userId}`,
+  `app_member?user_id=eq.${userId}`,
+  `vehicle?id=eq.${vehicleId}`,
+]) {
+  await fetch(`${API}/rest/v1/${path}`, {
+    method: 'DELETE',
+    headers: {
+      apikey: SVC,
+      Authorization: `Bearer ${SVC}`,
+      'Content-Profile': SCHEMA,
+    },
+  })
+}
 await admin(`/auth/v1/admin/users/${userId}`, { method: 'DELETE' })
 
 console.log(problems.length ? `\nPROBLEMS:\n- ${problems.join('\n- ')}` : '\nNo problems detected.')

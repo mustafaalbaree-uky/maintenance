@@ -13,10 +13,27 @@ if (!url || !anonKey) {
 
 // This project's Postgres is shared with another app that owns `public`. Every table
 // here lives in the `maintenance` schema, so the client is pinned to it.
+//
+// `storageKey` matters more than it looks. Both apps are served from the same
+// github.io origin and point at the same project, so supabase-js would default both to
+// `sb-<ref>-auth-token`, one localStorage slot shared between two apps. Signing into one
+// silently signed you into the other. This gives Maintenance its own slot.
 export const supabase = createClient(url, anonKey, {
-  auth: { persistSession: true, autoRefreshToken: true },
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    storageKey: 'maintenance-auth',
+  },
   db: { schema: 'maintenance' },
 })
+
+/**
+ * Local sign out only. The default revokes every refresh token the user holds, which on a
+ * shared auth pool would sign them out of the other app too.
+ */
+export async function signOut() {
+  await supabase.auth.signOut({ scope: 'local' })
+}
 
 export const RECEIPTS_BUCKET = 'maintenance-receipts'
 
