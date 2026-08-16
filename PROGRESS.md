@@ -107,6 +107,26 @@ The chosen notification channel, multi user. Not planned.
   a receipt is a row and services point at it. Money lives on the receipt so summing
   service rows cannot double count.
 
+## iOS specifics
+
+Everything here was found on a real phone, not in a browser.
+
+- **Form controls are 16px.** Safari zooms into any focused field under that and does not
+  zoom back out.
+- **Page zoom is locked at 1x** by `lock-zoom.ts`, at the owner's request. The viewport tag
+  does nothing in Safari, which has ignored `user-scalable` since iOS 10; what works is
+  preventDefault on the gesture events and on a multi touch touchmove, all with
+  `passive: false`. System wide accessibility zoom is untouched. This does cost the ability
+  to magnify a receipt photo.
+- **The session lives in IndexedDB**, mirrored to localStorage. iOS clears script written
+  localStorage, which signed him out on every launch from the Home Screen.
+- **An `apple-touch-icon` is declared explicitly.** With none, iOS falls back to Safari's
+  icon cache for the origin, which is shared with the other app, so the Home Screen icon
+  was mailbox's. iOS caches the icon at save time: the shortcut has to be removed and
+  re-added to pick up a change.
+- **Safe area insets** on the body and tab bar. The status bar is translucent over a
+  `viewport-fit=cover` page, so without them the header draws under the clock.
+
 ## Bugs found and fixed
 
 - **The two apps shared one login.** Both are served from the same github.io origin and
@@ -140,6 +160,7 @@ npm test                          # 32 unit tests, projection and schedule
 ./scripts/verify-backend.sh       # provisioning and RLS, needs API and ANON env for remote
 node scripts/check-auth-gate.mjs  # signed out visitor is held at sign in, phone and desktop
 SVC=<service_role_key> node scripts/smoke-ui.mjs   # walks every screen, both widths
+SVC=<service_role_key> node scripts/check-session-persistence.mjs  # survives a storage wipe
 ```
 
 `smoke-ui.mjs` creates a throwaway account, screenshots every screen to `/tmp/ui-*.png`,
