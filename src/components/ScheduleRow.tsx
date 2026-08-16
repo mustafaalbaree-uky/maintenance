@@ -4,7 +4,21 @@ import { supabase } from '../lib/supabase'
 import { useStore } from '../lib/store'
 import { StatusRow, Button } from './ui'
 import { costRange, longDate, remainingLabel } from '../lib/format'
-import type { ScheduleEntry } from '../lib/schedule'
+import type { DueStatus, ScheduleEntry } from '../lib/schedule'
+
+const STATUS_WORD: Record<DueStatus, string> = {
+  overdue: 'Overdue',
+  due_soon: 'Due soon',
+  upcoming: 'Coming up',
+  ok: 'Scheduled',
+}
+
+const STATUS_TEXT: Record<DueStatus, string> = {
+  overdue: 'var(--color-overdue)',
+  due_soon: 'var(--color-soon)',
+  upcoming: 'var(--color-clear)',
+  ok: 'var(--color-text-3)',
+}
 
 // Most rows have no cost figure, because the source document gives none. The layout is
 // designed for that case first: where a field is null the row shows nothing in its place.
@@ -43,6 +57,18 @@ export function ScheduleRow({ entry }: { entry: ScheduleEntry }) {
           <span className="t-card-title">{item.name}</span>
           <span className="t-figure text-text-2">
             {remainingLabel(entry.milesRemaining, entry.daysRemaining)}
+          </span>
+        </div>
+        <div className="mt-[3px] flex items-baseline gap-2">
+          <span className="t-figure" style={{ color: STATUS_TEXT[entry.status] }}>
+            {STATUS_WORD[entry.status]}
+          </span>
+          <span className="t-support text-text-3">
+            {entry.dueAtMiles != null
+              ? `at ${entry.dueAtMiles.toLocaleString('en-US')} miles`
+              : entry.dueAtDate
+                ? `by ${longDate(entry.dueAtDate)}`
+                : ''}
           </span>
         </div>
         {open ? (

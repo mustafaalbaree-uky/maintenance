@@ -5,6 +5,7 @@ import { Gauge, OdometerReadout } from '../components/Gauge'
 import { Button, Card, SectionLabel } from '../components/ui'
 import { OdometerEntry } from '../components/OdometerEntry'
 import { ScheduleRow } from '../components/ScheduleRow'
+import { nextUpLine } from '../lib/schedule'
 import { confidenceLine, longDate, miles, monthYear } from '../lib/format'
 import { dateAtMiles } from '../lib/projection'
 import { today } from '../lib/format'
@@ -96,13 +97,7 @@ export function Home() {
           </div>
         ) : (
           <Card>
-            <p className="t-body text-text-2">
-              {nextUp
-                ? `Nothing's due. ${nextUp.item.name} in about ${miles(
-                    Math.round((nextUp.milesRemaining ?? 0) / 100) * 100,
-                  )} miles.`
-                : "Nothing's due."}
-            </p>
+            <p className="t-body text-text-2">{nextUpLine(nextUp ?? undefined)}</p>
           </Card>
         )}
         <Link to="/coming-up" className="t-support mt-3 inline-block hover:text-text">

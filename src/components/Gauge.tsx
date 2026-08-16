@@ -156,6 +156,27 @@ export function Gauge({
         )
       })}
 
+      {/* The car sits under the needle sweep: a G70 in silhouette, three quarter rear.
+          Drawn rather than photographed, so it stays quiet at any size. */}
+      <g transform={`translate(150, 108) scale(${width / 300})`} opacity="0.5">
+        <path
+          d="M -34 8 C -34 2, -30 -1, -25 -2 L -18 -9 C -15 -12, -11 -13, -7 -13 L 8 -13
+             C 13 -13, 17 -11, 20 -8 L 27 -2 C 32 -1, 34 2, 34 7 L 34 10
+             C 34 12, 32 13, 30 13 L -30 13 C -32 13, -34 12, -34 10 Z"
+          fill="var(--color-panel-hi)"
+          stroke="var(--color-line)"
+          strokeWidth="1"
+        />
+        {/* Glasshouse */}
+        <path
+          d="M -16 -8 C -13 -11, -10 -11.5, -6 -11.5 L 7 -11.5 C 11 -11.5, 14 -10, 17 -7 Z"
+          fill="var(--color-ink)"
+          opacity="0.8"
+        />
+        <circle cx="-19" cy="13" r="5" fill="var(--color-ink)" stroke="var(--color-line)" strokeWidth="1" />
+        <circle cx="19" cy="13" r="5" fill="var(--color-ink)" stroke="var(--color-line)" strokeWidth="1" />
+      </g>
+
       <line
         x1={CX}
         y1={CY}

@@ -21,8 +21,8 @@ export function History() {
 
   return (
     <div className="px-4 py-5">
-      <div className="mb-5 flex items-baseline justify-between">
-        <h1 className="t-title">History</h1>
+      <div className="mb-1 flex items-baseline justify-between">
+        <h1 className="t-title">Receipts</h1>
         {logs.length ? (
           <span className="t-figure text-text-2">
             {complete} of {logs.length} claim ready
@@ -30,14 +30,18 @@ export function History() {
         ) : null}
       </div>
 
+      <p className="t-support mb-4 max-w-prose">
+        This is what your warranty reads if it ever argues with you. Every receipt needs the
+        VIN, the date, the odometer, and what was done. The odometer is the one shops leave
+        off, and the one that gets claims denied.
+      </p>
+
+      <Link to="/log" className="mb-5 block">
+        <Button className="w-full">Log a service</Button>
+      </Link>
+
       {logs.length === 0 ? (
-        <EmptyState
-          action={
-            <Link to="/log">
-              <Button>Log a service</Button>
-            </Link>
-          }
-        >
+        <EmptyState>
           Your service records go here. Every receipt with a VIN, date, odometer, and description
           is one your warranty can't argue with.
         </EmptyState>

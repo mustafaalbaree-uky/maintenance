@@ -58,6 +58,7 @@ export const ONBOARDING_CARDS: OnboardingCard[] = [
       "Your extended warranty can cover thousands in repairs. It can also deny a claim if you can't prove you maintained the car.",
       'Every receipt needs four things: your VIN, the date, the odometer, and what was done. The odometer is the one shops leave off and the one that gets claims denied.',
       "Log it here and the app won't let you skip it. Photograph the receipt before you leave the parking lot.",
+      'Everything you log lives under Receipts, at the bottom of the screen. That tab is the record your warranty reads if it ever argues with you.',
     ],
     button: 'Makes sense',
     action: { kind: 'log_demo' },
@@ -102,6 +103,7 @@ export const ONBOARDING_CARDS: OnboardingCard[] = [
     heading: 'Done',
     body: [
       "You don't need to remember any of this. Open the app when you think of it, put in your mileage, and do whatever it says is coming up.",
+      'Settings is where you choose how the app reminds you, change your password, or run this tutorial again.',
       'Good luck with the car.',
     ],
     button: 'Start using the app',

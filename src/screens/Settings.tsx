@@ -4,6 +4,8 @@ import { useStore } from '../lib/store'
 import { Button, Card, SectionLabel } from '../components/ui'
 import { longDate } from '../lib/format'
 import { ChangePassword } from './ChangePassword'
+import { NotificationSettings } from '../components/NotificationSettings'
+import { TestPanel } from '../components/TestPanel'
 
 export function Settings() {
   const { vehicle, appState, setAppState, session } = useStore()
@@ -53,6 +55,13 @@ export function Settings() {
       </div>
 
       <div className="mt-7">
+        <SectionLabel>Reminders</SectionLabel>
+        <Card>
+          <NotificationSettings email={session?.user.email} />
+        </Card>
+      </div>
+
+      <div className="mt-7">
         <SectionLabel>Password</SectionLabel>
         <Card>
           <ChangePassword />
@@ -72,6 +81,13 @@ export function Settings() {
           </Button>
         </Card>
       </div>
+
+      {session?.user.user_metadata?.is_tester ? (
+        <div className="mt-7">
+          <SectionLabel>Testing</SectionLabel>
+          <TestPanel />
+        </div>
+      ) : null}
     </div>
   )
 }

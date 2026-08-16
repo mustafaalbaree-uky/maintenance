@@ -17,7 +17,7 @@ const TABS = [
   { to: '/', label: 'Home' },
   { to: '/coming-up', label: 'Coming up' },
   { to: '/tasks', label: 'First things' },
-  { to: '/history', label: 'History' },
+  { to: '/history', label: 'Receipts' },
 ]
 
 function TabBar() {

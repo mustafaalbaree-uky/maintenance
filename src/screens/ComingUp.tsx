@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useStore } from '../lib/store'
 import { ScheduleRow } from '../components/ScheduleRow'
 import { Card, SectionLabel } from '../components/ui'
-import { miles } from '../lib/format'
+import { nextUpLine } from '../lib/schedule'
 
 export function ComingUp() {
   const { schedule } = useStore()
@@ -24,13 +24,7 @@ export function ComingUp() {
         </div>
       ) : (
         <Card>
-          <p className="t-body text-text-2">
-            {next
-              ? `Nothing's due. ${next.item.name} in about ${miles(
-                  Math.round((next.milesRemaining ?? 0) / 100) * 100,
-                )} miles.`
-              : "Nothing's due."}
-          </p>
+          <p className="t-body text-text-2">{nextUpLine(next)}</p>
         </Card>
       )}
 

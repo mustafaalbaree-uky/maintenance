@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { estimateOdometer } from './projection'
-import { buildSchedule, scheduleEntry, statusFor } from './schedule'
+import { buildSchedule, nextUpLine, scheduleEntry, statusFor } from './schedule'
 import type { MaintenanceItem, ServiceLog } from './types'
 
 const TODAY = '2026-08-15'
@@ -129,5 +129,44 @@ describe('buildSchedule', () => {
     ]
     const order = buildSchedule(items, [], estimateAt(47310), TODAY).map((e) => e.item.id)
     expect(order).toEqual(['late', 'soon', 'ok'])
+  })
+})
+
+describe('nextUpLine', () => {
+  // The bug: leather conditioning runs on months only, so asking for its mileage gave
+  // "Nothing's due. Leather conditioning in about 0 miles."
+  it('describes a time only item in time, not in zero miles', () => {
+    const leather = item({
+      id: 'leather',
+      name: 'Leather conditioning',
+      interval_miles: null,
+      interval_months: 4,
+    })
+    const entry = scheduleEntry(leather, [], estimateAt(42000), TODAY)
+    const line = nextUpLine(entry)
+    expect(line).not.toContain('0 miles')
+    expect(line).toContain('Leather conditioning')
+    expect(line).toMatch(/around \w+ \d{4}\.$/)
+  })
+
+  it('describes a mileage only item in miles', () => {
+    const coolant = item({
+      id: 'coolant',
+      name: 'Coolant flush',
+      interval_miles: 18000,
+      interval_months: null,
+    })
+    const entry = scheduleEntry(coolant, [], estimateAt(42000), TODAY)
+    expect(nextUpLine(entry)).toBe('Nothing\'s due. Coolant flush in about 18,000 miles.')
+  })
+
+  it('does not round a near miss down to zero miles', () => {
+    const soon = item({ id: 'soon', interval_miles: 5000, interval_months: null })
+    const entry = scheduleEntry(soon, [], estimateAt(46960), TODAY)
+    expect(nextUpLine(entry)).toContain('in under 100 miles')
+  })
+
+  it('says so plainly when there is no next item at all', () => {
+    expect(nextUpLine(undefined)).toBe("Nothing's due, and nothing is scheduled yet.")
   })
 })

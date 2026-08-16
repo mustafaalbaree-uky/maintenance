@@ -35,9 +35,39 @@ export function longDate(iso: string): string {
   })
 }
 
-export function today(): string {
+const SIM_OFFSET_KEY = 'maintenance:debug-day-offset'
+
+/** The real calendar date, untouched by the tester's clock shift. */
+export function realToday(): string {
   const d = new Date()
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+export function simulatedOffset(): number {
+  if (typeof localStorage === 'undefined') return 0
+  return Number(localStorage.getItem(SIM_OFFSET_KEY) ?? 0) || 0
+}
+
+export function setSimulatedOffset(days: number): void {
+  if (typeof localStorage === 'undefined') return
+  if (days === 0) localStorage.removeItem(SIM_OFFSET_KEY)
+  else localStorage.setItem(SIM_OFFSET_KEY, String(days))
+}
+
+export function simulatedToday(): string {
+  const offset = simulatedOffset()
+  if (!offset) return realToday()
+  const d = new Date(`${realToday()}T12:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + offset)
+  return d.toISOString().slice(0, 10)
+}
+
+/**
+ * What the app treats as today. This is the shifted date when a tester has moved the
+ * clock, and the real date for everyone else, which is every real account.
+ */
+export function today(): string {
+  return simulatedToday()
 }
 
 /** Never show a bare number with hidden uncertainty. */
@@ -83,6 +113,9 @@ export function remainingLabel(
     return `${d} day${d === 1 ? '' : 's'} over`
   }
   if (milesRemaining != null && (daysRemaining == null || milesRemaining / 33 <= daysRemaining)) {
+    // Rounding to the nearest hundred turns anything under fifty into "0 miles", which
+    // reads as broken next to a line saying nothing is due.
+    if (milesRemaining < 100) return 'in under 100 miles'
     return `in about ${miles(Math.round(milesRemaining / 100) * 100)} miles`
   }
   if (daysRemaining != null) {
