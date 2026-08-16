@@ -47,7 +47,7 @@ export function Home() {
         </Link>
       </div>
 
-      <div className="flex flex-col items-center">
+      <div className="enter enter-1 flex flex-col items-center">
         <Gauge
           purchaseOdometer={vehicle.purchase_odometer}
           planEndOdometer={planEnd}
@@ -87,7 +87,7 @@ export function Home() {
         </Card>
       ) : null}
 
-      <div className="mt-7">
+      <div className="enter enter-2 mt-7">
         <SectionLabel>Coming up</SectionLabel>
         {pending.length ? (
           <div className="flex flex-col gap-2">
@@ -105,7 +105,7 @@ export function Home() {
         </Link>
       </div>
 
-      <div className="mt-7 flex gap-2">
+      <div className="enter enter-3 mt-7 flex gap-2">
         <Button className="flex-1" onClick={() => setSheetOpen(true)}>
           Add reading
         </Button>
@@ -120,9 +120,9 @@ export function Home() {
       </div>
 
       {sheetOpen ? (
-        <div className="fixed inset-0 z-20 flex items-end bg-black/60" onClick={() => setSheetOpen(false)}>
+        <div className="sheet-scrim fixed inset-0 z-20 flex items-end bg-black/60" onClick={() => setSheetOpen(false)}>
           <div
-            className="w-full rounded-t-[14px] border-t border-line bg-panel px-4 pb-8 pt-5"
+            className="sheet-panel w-full rounded-t-[14px] border-t border-line bg-panel px-4 pb-8 pt-5"
             onClick={(e) => e.stopPropagation()}
           >
             <SectionLabel>Add reading</SectionLabel>

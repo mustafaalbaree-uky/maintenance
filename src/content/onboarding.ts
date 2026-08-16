@@ -100,6 +100,27 @@ export const ONBOARDING_CARDS: OnboardingCard[] = [
     action: { kind: 'route', to: '/budget' },
   },
   {
+    heading: 'Where your receipts live',
+    body: [
+      'Receipts, at the bottom of the screen, is every service you have logged. It is the least exciting tab and the one that pays for itself.',
+      'Each entry counts as claim ready when it has the odometer, the date, what was done, and a photo. The tab header tells you how many of yours are there.',
+      'When a shop finishes something, log it before you drive off. It takes about twenty seconds.',
+    ],
+    // Deliberately not a route card: those finish the tutorial, and this one sits near
+    // the end, so tapping through would skip the cards after it.
+    button: 'Got it',
+    action: { kind: 'advance' },
+  },
+  {
+    heading: 'How the app should nudge you',
+    body: [
+      'Left alone, this app stays silent, which means remembering to open it is on you.',
+      'In Settings you can pick how it reminds you: a weekly email, an email only when something needs doing, or a push to your iPhone. You can also change your password there, or run this tutorial again.',
+    ],
+    button: 'Got it',
+    action: { kind: 'advance' },
+  },
+  {
     heading: 'Done',
     body: [
       "You don't need to remember any of this. Open the app when you think of it, put in your mileage, and do whatever it says is coming up.",

@@ -5,6 +5,7 @@ import { Button, Card, SectionLabel } from '../components/ui'
 import { longDate } from '../lib/format'
 import { ChangePassword } from './ChangePassword'
 import { NotificationSettings } from '../components/NotificationSettings'
+import { MotionSettings } from '../components/MotionSettings'
 import { TestPanel } from '../components/TestPanel'
 
 export function Settings() {
@@ -51,6 +52,13 @@ export function Settings() {
           >
             Run it again
           </Button>
+        </Card>
+      </div>
+
+      <div className="mt-7">
+        <SectionLabel>Movement</SectionLabel>
+        <Card>
+          <MotionSettings />
         </Card>
       </div>
 

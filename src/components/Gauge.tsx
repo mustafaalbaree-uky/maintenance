@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { duration, useMotion } from '../lib/motion'
 
 // The instrument cluster. Needle position is the live estimated odometer and the red
 // band is the 60,000 to 80,000 mile window from the research, so the gauge does the work
@@ -56,6 +57,7 @@ export function Gauge({
   introAnimation = false,
   width = 300,
 }: Props) {
+  const motion = useMotion()
   const reduceMotion =
     typeof window !== 'undefined' &&
     window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -79,13 +81,20 @@ export function Gauge({
     const from = displayF
     if (Math.abs(from - target) < 0.0005) return
 
-    // 700ms on the first-launch sweep, 400ms as feedback on a saved reading.
-    const duration = introAnimation ? 700 : 400
+    // The first-launch sweep is always the long one. Everything after is feedback on an
+    // action, and its length follows the motion setting.
+    const ms = introAnimation ? 700 : duration(motion, 'needle')
     const startedAt = performance.now()
-    const ease = (t: number) => 1 - Math.pow(1 - t, 3)
+    // A needle on a real instrument overshoots very slightly and settles.
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
+    const easeSettle = (t: number) => {
+      const c = 1.70158 * 0.6
+      return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2)
+    }
+    const ease = motion === 'restrained' ? easeOut : easeSettle
 
     const step = (now: number) => {
-      const t = Math.min(1, (now - startedAt) / duration)
+      const t = Math.min(1, (now - startedAt) / ms)
       setDisplayF(from + (target - from) * ease(t))
       if (t < 1) raf.current = requestAnimationFrame(step)
     }
@@ -94,7 +103,7 @@ export function Gauge({
       if (raf.current) cancelAnimationFrame(raf.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fNow])
+  }, [fNow, motion])
 
   const needle = point(displayF)
   const needleInner = {
@@ -196,7 +205,32 @@ export function Gauge({
 
 /** Six digit cells, a light nod to a mechanical odometer drum. */
 export function OdometerReadout({ miles, stagger = false }: { miles: number; stagger?: boolean }) {
-  const digits = String(Math.max(0, Math.round(miles))).padStart(6, '0').split('')
+  const motion = useMotion()
+  const [shown, setShown] = useState(miles)
+  const previous = useRef(miles)
+
+  useEffect(() => {
+    if (motion !== 'full' || previous.current === miles) {
+      previous.current = miles
+      setShown(miles)
+      return
+    }
+    const from = previous.current
+    previous.current = miles
+    const startedAt = performance.now()
+    const ms = 700
+    let frame = 0
+    const step = (now: number) => {
+      const t = Math.min(1, (now - startedAt) / ms)
+      const eased = 1 - Math.pow(1 - t, 3)
+      setShown(Math.round(from + (miles - from) * eased))
+      if (t < 1) frame = requestAnimationFrame(step)
+    }
+    frame = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frame)
+  }, [miles, motion])
+
+  const digits = String(Math.max(0, Math.round(shown))).padStart(6, '0').split('')
   let leading = true
 
   return (

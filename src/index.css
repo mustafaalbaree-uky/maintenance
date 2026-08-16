@@ -108,3 +108,77 @@ input[type='number']::-webkit-inner-spin-button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============ Motion ============
+   Level is stamped on <html data-motion>. `restrained` is the default and keeps the
+   original position: the app opens at its final state. The others are opt in from
+   Settings, and prefers-reduced-motion overrides all of them. */
+
+:root {
+  --dur-sheet: 0ms;
+  --dur-expand: 0ms;
+  --dur-enter: 0ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.42, 0.44, 1);
+}
+
+[data-motion='considered'] {
+  --dur-sheet: 260ms;
+  --dur-expand: 200ms;
+  --dur-enter: 260ms;
+}
+
+[data-motion='full'] {
+  --dur-sheet: 320ms;
+  --dur-expand: 240ms;
+  --dur-enter: 340ms;
+}
+
+@keyframes cell-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(14px); opacity: 0.6; }
+  to   { transform: none; opacity: 1; }
+}
+
+@keyframes scrim-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes group-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.sheet-panel { animation: sheet-up var(--dur-sheet) var(--ease-out) both; }
+.sheet-scrim { animation: scrim-in var(--dur-sheet) linear both; }
+
+/* Entrance groups. At the default level the duration is 0ms, so they simply appear. */
+.enter { animation: group-enter var(--dur-enter) var(--ease-out) both; }
+.enter-1 { animation-delay: 0ms; }
+.enter-2 { animation-delay: 60ms; }
+.enter-3 { animation-delay: 120ms; }
+
+/* Expanding a row without measuring its height. */
+.expandable {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-expand) var(--ease-out);
+}
+.expandable[data-open='true'] { grid-template-rows: 1fr; }
+.expandable > * { overflow: hidden; }
+
+[data-motion='restrained'] .enter,
+[data-motion='restrained'] .sheet-panel,
+[data-motion='restrained'] .sheet-scrim {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter, .sheet-panel, .sheet-scrim { animation: none !important; }
+  .expandable { transition: none !important; }
+}

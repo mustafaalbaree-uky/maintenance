@@ -71,21 +71,23 @@ export function ScheduleRow({ entry }: { entry: ScheduleEntry }) {
                 : ''}
           </span>
         </div>
-        {open ? (
-          <div className="mt-3 flex flex-col gap-2">
-            <p className="t-body text-text-2">{item.plain_language}</p>
-            <p className="t-body text-text-2">{item.why_it_matters}</p>
-            {item.note ? <p className="t-support">{item.note}</p> : null}
-            {cost ? <p className="t-support">Usually {cost}.</p> : null}
-            {prevents ? <p className="t-support">Against {prevents}.</p> : null}
-            {entry.lastService ? (
-              <p className="t-support text-text-3">
-                Last done {longDate(entry.lastService.performed_on)} at{' '}
-                {entry.lastService.odometer.toLocaleString('en-US')} miles.
-              </p>
-            ) : null}
+        <div className="expandable" data-open={open}>
+          <div>
+            <div className="mt-3 flex flex-col gap-2">
+              <p className="t-body text-text-2">{item.plain_language}</p>
+              <p className="t-body text-text-2">{item.why_it_matters}</p>
+              {item.note ? <p className="t-support">{item.note}</p> : null}
+              {cost ? <p className="t-support">Usually {cost}.</p> : null}
+              {prevents ? <p className="t-support">Against {prevents}.</p> : null}
+              {entry.lastService ? (
+                <p className="t-support text-text-3">
+                  Last done {longDate(entry.lastService.performed_on)} at{' '}
+                  {entry.lastService.odometer.toLocaleString('en-US')} miles.
+                </p>
+              ) : null}
+            </div>
           </div>
-        ) : null}
+        </div>
       </StatusRow>
 
       {open ? (
