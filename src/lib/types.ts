@@ -55,6 +55,7 @@ export interface ServiceLog {
   id: string
   vehicle_id: string
   maintenance_item_id: string | null
+  receipt_id: string | null
   performed_on: string
   odometer: number
   description: string
@@ -64,6 +65,18 @@ export interface ServiceLog {
   claim_status: 'filed' | 'approved' | 'denied' | null
   deductible_paid_cents: number | null
   receipt_path: string | null
+  notes: string | null
+  created_at: string
+}
+
+export interface Receipt {
+  id: string
+  vehicle_id: string
+  storage_path: string | null
+  performed_on: string
+  odometer: number | null
+  shop_name: string | null
+  total_cost_cents: number | null
   notes: string | null
   created_at: string
 }

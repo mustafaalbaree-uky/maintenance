@@ -36,6 +36,7 @@ function log(over: Partial<ServiceLog> = {}): ServiceLog {
     id: 'log-1',
     vehicle_id: 'v1',
     maintenance_item_id: 'item-1',
+    receipt_id: null,
     performed_on: PURCHASE,
     odometer: 42000,
     description: 'Oil change',

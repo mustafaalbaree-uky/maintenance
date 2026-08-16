@@ -9,6 +9,7 @@ import type {
   AppState,
   MaintenanceItem,
   OdometerReading,
+  Receipt,
   ServiceLog,
   Task,
   Vehicle,
@@ -25,6 +26,7 @@ interface Store {
   readings: OdometerReading[]
   items: MaintenanceItem[]
   logs: ServiceLog[]
+  receipts: Receipt[]
   tasks: Task[]
   watchItems: WatchItem[]
   warranties: Warranty[]
@@ -51,6 +53,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [readings, setReadings] = useState<OdometerReading[]>([])
   const [items, setItems] = useState<MaintenanceItem[]>([])
   const [logs, setLogs] = useState<ServiceLog[]>([])
+  const [receipts, setReceipts] = useState<Receipt[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
   const [watchItems, setWatchItems] = useState<WatchItem[]>([])
   const [warranties, setWarranties] = useState<Warranty[]>([])
@@ -85,10 +88,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setAppStateRow((st as AppState) ?? null)
 
     if (v) {
-      const [r, i, l, t, w, wa] = await Promise.all([
+      const [r, i, l, rc, t, w, wa] = await Promise.all([
         supabase.from('odometer_reading').select('*').order('reading_date'),
         supabase.from('maintenance_item').select('*').order('sort_order'),
         supabase.from('service_log').select('*').order('performed_on', { ascending: false }),
+        supabase.from('receipt').select('*').order('performed_on', { ascending: false }),
         supabase.from('task').select('*').order('sort_order'),
         supabase.from('watch_item').select('*').order('window_start_miles'),
         supabase.from('warranty').select('*'),
@@ -96,6 +100,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setReadings((r.data as OdometerReading[]) ?? [])
       setItems((i.data as MaintenanceItem[]) ?? [])
       setLogs((l.data as ServiceLog[]) ?? [])
+      setReceipts((rc.data as Receipt[]) ?? [])
       setTasks((t.data as Task[]) ?? [])
       setWatchItems((w.data as WatchItem[]) ?? [])
       setWarranties((wa.data as Warranty[]) ?? [])
@@ -147,6 +152,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     readings,
     items,
     logs,
+    receipts,
     tasks,
     watchItems,
     warranties,
