@@ -86,8 +86,43 @@ The local Supabase stack could not be started to verify against it directly: no 
 runtime was running on this machine (`docker ps` failed with no daemon socket), so this
 is the fallback the repo's own verification section already allows for.
 
-Not started: Trendline chart, Warranty screen including the unresolved MaxCare cap
-prompt, Symptom lookup, desktop density pass.
+**Cost over ownership trendline, built 4 Sep 2026.** A card on Coming up, not its own
+route. No onboarding card names a trendline screen the way cards point at `/timeline`,
+`/symptoms`, and `/budget`, and Coming up is the screen a person actually opens
+repeatedly, which is where a running number like this belongs.
+
+The projected line sums, on the mileage axis Timeline already established, every active
+`maintenance_item` that carries a cost figure in the ownership guide: as of this seed
+data, that is exactly two items, the transmission fluid service and the 12V battery load
+test. A mileage interval item places directly. A calendar interval item is converted to a
+mileage position with the same adaptive daily rate `projection.ts` uses everywhere else,
+reused rather than re-derived. The line holds flat between occurrences and out to the end
+of the range rather than stopping at the last dollar figure the guide happens to give.
+Watch items are deliberately excluded from this line: `coverage_guess` is a guess, not a
+certainty, and folding a maybe into a cumulative cost of ownership number would state it
+as fact. Watch items keep their own figures on `/timeline`.
+
+Logged spend overlays the line as points, one per visit rather than one per logged job,
+matching the grouping History.tsx already uses (a receipt covering three jobs is one
+dollar total, not three), reading `Receipt.total_cost_cents` first and a bare
+`ServiceLog.cost_cents` only when no receipt is attached. A visit with no cost figure at
+all contributes no point.
+
+Recharts, first use in this repo despite being a dependency since Phase 1. One line, no
+legend: the card title and caption carry what the line and the dot mean. Muted grid,
+labelled axes, the existing dark theme's action and clear colors, no new palette.
+
+Verified with unit tests on the series builders (`src/lib/trendline.test.ts`: the
+ownership range, the cost midpoint rule, mileage and calendar interval placement, the
+inactive and uncosted item exclusions, the flat tail, the per visit dedupe on actuals)
+and a Playwright render against the local dev server with Supabase intercepted and
+answered from fixture data, checking the chart renders, the line and dot counts, and that
+no legend appears (`scripts/check-trendline-render.mjs`). Same fallback as the timeline
+slice: no container runtime on this machine to verify against the local Supabase stack
+directly.
+
+Not started: Warranty screen including the unresolved MaxCare cap prompt, Symptom
+lookup, desktop density pass.
 
 Onboarding cards 8 and 9 point at `/symptoms` and `/budget`. Until those routes exist the
 cards advance instead of routing. `BUILT_ROUTES` in `Onboarding.tsx` is the switch. **Add

@@ -86,6 +86,8 @@ paths.
 ```
 src/lib/projection.ts   adaptive mileage projection, pure, unit tested
 src/lib/schedule.ts     due status for each maintenance item
+src/lib/timeline.ts     watch item placement on the mileage axis, pure, unit tested
+src/lib/trendline.ts    projected and actual cumulative cost series, pure, unit tested
 src/lib/store.tsx       session, vehicle, and derived state
 src/content/            onboarding copy, kept out of JSX so template sets can branch
 supabase/migrations/    schema, RLS, grants, provisioning function
@@ -97,7 +99,7 @@ supabase/seed.sql       templates, watch items, symptoms
 Phase 1 is built: auth, vehicle creation, onboarding, odometer entry with the adaptive
 projection, Coming up, service logging with receipt capture, tasks, and history.
 
-Phase 2 has the timeline of watch items. The rest of it is not built: the trendline chart,
-warranty screen with the unresolved MaxCare cap prompt, symptom lookup, notifications, and
-budget. Three onboarding
-cards point at those screens and currently advance instead of routing.
+Phase 2 has the timeline of watch items and the cost over ownership trendline, a card on
+Coming up. The rest of it is not built: the warranty screen with the unresolved MaxCare
+cap prompt, symptom lookup, notifications, and budget. Two onboarding cards point at
+those screens and currently advance instead of routing.

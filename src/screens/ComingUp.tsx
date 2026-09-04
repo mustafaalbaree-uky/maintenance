@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '../lib/store'
 import { ScheduleRow } from '../components/ScheduleRow'
+import { TrendlineChart } from '../components/TrendlineChart'
 import { Card, SectionLabel } from '../components/ui'
 import { nextUpLine } from '../lib/schedule'
 
@@ -50,6 +51,10 @@ export function ComingUp() {
           ) : null}
         </div>
       ) : null}
+
+      <div className="mt-7">
+        <TrendlineChart />
+      </div>
     </div>
   )
 }
