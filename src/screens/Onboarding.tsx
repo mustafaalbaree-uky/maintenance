@@ -9,8 +9,8 @@ import { LogServiceForm } from './LogService'
 // Twelve cards, shown once, before the app is reachable. The tutorial is not
 // decorative: by the end he has entered his odometer and seen his first-week list.
 
-/** Routes that exist today. Phase 2 still owes /symptoms and /budget. */
-const BUILT_ROUTES = new Set(['/coming-up', '/tasks', '/history', '/timeline'])
+/** Routes that exist today. Phase 2 still owes /budget. */
+const BUILT_ROUTES = new Set(['/coming-up', '/tasks', '/history', '/timeline', '/symptoms'])
 
 export function Onboarding() {
   const { appState, setAppState } = useStore()
@@ -45,8 +45,8 @@ export function Onboarding() {
   async function handleAction() {
     switch (card.action.kind) {
       case 'route':
-        // Timeline, Symptoms, and Budget arrive in later phases. Until they exist the
-        // card advances rather than bouncing him off a route that is not there.
+        // Budget still arrives in a later phase. Until it exists the card advances
+        // rather than bouncing him off a route that is not there.
         if (BUILT_ROUTES.has(card.action.to)) await finish(card.action.to)
         else await advance()
         break

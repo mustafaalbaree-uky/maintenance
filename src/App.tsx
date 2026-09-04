@@ -8,6 +8,7 @@ import { ComingUp } from './screens/ComingUp'
 import { History } from './screens/History'
 import { Tasks } from './screens/Tasks'
 import { Timeline } from './screens/Timeline'
+import { Symptoms } from './screens/Symptoms'
 import { LogService } from './screens/LogService'
 import { Settings } from './screens/Settings'
 import { NotAMember } from './screens/NotAMember'
@@ -87,6 +88,7 @@ function Shell() {
             <Route path="/coming-up" element={<ComingUp />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/timeline" element={<Timeline />} />
+            <Route path="/symptoms" element={<Symptoms />} />
             <Route path="/history" element={<History />} />
             <Route path="/log" element={<LogService />} />
             <Route path="/settings" element={<Settings />} />
