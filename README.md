@@ -90,6 +90,7 @@ src/lib/timeline.ts     watch item placement on the mileage axis, pure, unit tes
 src/lib/trendline.ts    projected and actual cumulative cost series, pure, unit tested
 src/lib/symptoms.ts     symptom search and its related watch item, pure, unit tested
 src/lib/warranty.ts     warranty cap math, both readings until the basis is recorded, pure, unit tested
+src/lib/budget.ts       next twelve months and rest of ownership cost, built on trendline.ts, pure, unit tested
 src/lib/store.tsx       session, vehicle, and derived state
 src/content/            onboarding copy, kept out of JSX so template sets can branch
 supabase/migrations/    schema, RLS, grants, provisioning function

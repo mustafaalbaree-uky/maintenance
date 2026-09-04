@@ -198,16 +198,44 @@ No onboarding card names `/warranty`, so it is not in `BUILT_ROUTES` and there i
 app link to it yet, matching how `/timeline` and `/symptoms` are also only reachable
 through their onboarding cards or a direct URL today.
 
-Not started: budget, notifications, desktop density pass.
+**Budget, built 4 Sep 2026.** `/budget` shows three figures: what the coming twelve
+months are projected to cost, what the rest of ownership is projected to cost, and what
+has already been spent. `src/lib/budget.ts` builds all three on top of
+`src/lib/trendline.ts` rather than re-deriving occurrence placement or cost summing: the
+twelve month mark is a mileage, not a date, found with the same adaptive daily rate the
+rest of the app uses to move between the two, and the cost through that mileage (and
+through the end of the ownership range) is read off the trendline's step series. Spent so
+far is the last point of the same actual series Coming up already plots. A MaxCare
+deductible card shows wherever a warranty row carries a deductible figure; nothing is
+shown for a warranty row without one.
 
-Onboarding card 9 points at `/budget`. Until that route exists the card advances instead
-of routing. `BUILT_ROUTES` in `Onboarding.tsx` is the switch. **Add the route there as it
-ships.**
+Same exclusion as the trendline card: only active `maintenance_item` rows with a cost
+figure feed the projection, watch items are left out because their figures are a
+coverage guess rather than a certainty. When no active item carries a cost figure, the
+two projected cards give way to a line saying so rather than a pair of zeros.
+
+Reuses `Card`, `SectionLabel`, `useStore`, `budgetSummary` built on `trendline.ts`, and
+the Shell auth guard. No new colors, no free text advice, nothing invented.
+
+Verified with unit tests on the summary math (`src/lib/budget.test.ts`: clamping the
+current mileage into the ownership range, projecting the twelve month boundary forward
+with the daily rate and clamping it to the range end, an occurrence that falls outside
+versus inside the twelve month window, the no cost data case, and reading spent so far
+off the actual series) and a Playwright render against the local dev server with
+Supabase intercepted and answered from fixture data, checking all three cards, the
+MaxCare deductible card, and that no undefined or NaN value renders
+(`scripts/check-budget-render.mjs`). Same fallback as the rest of Phase 2: no container
+runtime on this machine to verify against the local Supabase stack directly.
+
+`BUILT_ROUTES` in `Onboarding.tsx` now includes `/budget`, so onboarding card 9 routes
+there instead of advancing past it.
+
+Not started: notifications, offline queue flush, PDF export, desktop density pass.
 
 ## Phase 3, not started
 
 Notification dispatch: `pg_cron` job, outbox rows, dedupe, `NoneChannel`, preview screen.
-Budget. Offline queue flush. PDF export.
+Offline queue flush. PDF export.
 
 The channel preference UI exists in Settings and writes `notification_preference`. Nothing
 sends. The UI says so rather than implying otherwise.

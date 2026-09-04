@@ -10,6 +10,7 @@ import { Tasks } from './screens/Tasks'
 import { Timeline } from './screens/Timeline'
 import { Symptoms } from './screens/Symptoms'
 import { Warranty } from './screens/Warranty'
+import { Budget } from './screens/Budget'
 import { LogService } from './screens/LogService'
 import { Settings } from './screens/Settings'
 import { NotAMember } from './screens/NotAMember'
@@ -91,6 +92,7 @@ function Shell() {
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/symptoms" element={<Symptoms />} />
             <Route path="/warranty" element={<Warranty />} />
+            <Route path="/budget" element={<Budget />} />
             <Route path="/history" element={<History />} />
             <Route path="/log" element={<LogService />} />
             <Route path="/settings" element={<Settings />} />
