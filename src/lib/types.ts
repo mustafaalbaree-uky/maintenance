@@ -115,6 +115,7 @@ export interface Warranty {
   reduced_deductible_condition: string | null
   coverage_type: string | null
   notes: string | null
+  cap_basis_recorded_at: string | null
 }
 
 export interface Task {
