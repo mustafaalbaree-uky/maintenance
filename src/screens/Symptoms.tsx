@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useStore } from '../lib/store'
-import { Card, EmptyState, Input, SectionLabel } from '../components/ui'
+import { Card, CardGrid, EmptyState, Input, SectionLabel } from '../components/ui'
 import { costRange, coverageSentence, miles } from '../lib/format'
 import { relatedWatchItem, searchSymptoms } from '../lib/symptoms'
 import type { SymptomRef } from '../lib/types'
@@ -105,11 +105,11 @@ export function Symptoms() {
           <SectionLabel>
             {results.length} symptom{results.length === 1 ? '' : 's'}
           </SectionLabel>
-          <div className="flex flex-col gap-2">
+          <CardGrid>
             {results.map((s) => (
               <SymptomRow key={s.id} symptom={s} />
             ))}
-          </div>
+          </CardGrid>
         </>
       ) : (
         <EmptyState>No symptom in the guide matches that search.</EmptyState>

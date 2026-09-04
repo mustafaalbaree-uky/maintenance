@@ -1,5 +1,5 @@
 import { useStore } from '../lib/store'
-import { Card, SectionLabel } from '../components/ui'
+import { Card, CardGrid, SectionLabel } from '../components/ui'
 import { budgetSummary } from '../lib/budget'
 import { miles, money, today } from '../lib/format'
 
@@ -23,42 +23,40 @@ export function Budget() {
         {miles(summary.range.endMiles)} miles.
       </p>
 
-      {summary.hasCostData ? (
-        <div className="flex flex-col gap-2">
+      <CardGrid columns={3}>
+        {summary.hasCostData ? (
+          <>
+            <Card>
+              <SectionLabel>Next twelve months</SectionLabel>
+              <p className="t-title mt-1">{money(summary.projectedNextTwelveMonthsCents)}</p>
+              <p className="t-support mt-1 text-text-3">
+                {miles(summary.currentMiles)} to {miles(summary.twelveMonthMiles)} miles.
+              </p>
+            </Card>
+
+            <Card>
+              <SectionLabel>Rest of ownership</SectionLabel>
+              <p className="t-title mt-1">{money(summary.projectedRestOfOwnershipCents)}</p>
+              <p className="t-support mt-1 text-text-3">
+                {miles(summary.currentMiles)} to {miles(summary.range.endMiles)} miles.
+              </p>
+            </Card>
+          </>
+        ) : (
           <Card>
-            <SectionLabel>Next twelve months</SectionLabel>
-            <p className="t-title mt-1">{money(summary.projectedNextTwelveMonthsCents)}</p>
-            <p className="t-support mt-1 text-text-3">
-              {miles(summary.currentMiles)} to {miles(summary.twelveMonthMiles)} miles.
+            <p className="t-body text-text-2">
+              None of your active schedule items have a cost figure in the ownership guide.
             </p>
           </Card>
+        )}
 
-          <Card>
-            <SectionLabel>Rest of ownership</SectionLabel>
-            <p className="t-title mt-1">{money(summary.projectedRestOfOwnershipCents)}</p>
-            <p className="t-support mt-1 text-text-3">
-              {miles(summary.currentMiles)} to {miles(summary.range.endMiles)} miles.
-            </p>
-          </Card>
-        </div>
-      ) : (
-        <Card>
-          <p className="t-body text-text-2">
-            None of your active schedule items have a cost figure in the ownership guide.
-          </p>
-        </Card>
-      )}
-
-      <div className="mt-2">
         <Card>
           <SectionLabel>Spent so far</SectionLabel>
           <p className="t-title mt-1">{money(summary.spentSoFarCents)}</p>
           <p className="t-support mt-1 text-text-3">From logged service and receipts.</p>
         </Card>
-      </div>
 
-      {maxCare ? (
-        <div className="mt-2">
+        {maxCare ? (
           <Card>
             <SectionLabel>{maxCare.name} deductible</SectionLabel>
             <p className="t-title mt-1">{money(maxCare.deductible_cents as number)}</p>
@@ -69,8 +67,8 @@ export function Budget() {
               </p>
             ) : null}
           </Card>
-        </div>
-      ) : null}
+        ) : null}
+      </CardGrid>
     </div>
   )
 }

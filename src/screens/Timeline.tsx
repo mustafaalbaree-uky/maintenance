@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useStore } from '../lib/store'
-import { Card, EmptyState, SectionLabel } from '../components/ui'
+import { Card, CardGrid, EmptyState, SectionLabel } from '../components/ui'
 import { costRange, coverageSentence, miles } from '../lib/format'
 import { placeWatchItems, timelineRange, nowFraction } from '../lib/timeline'
 import type { PlacedWatchItem } from '../lib/timeline'
@@ -93,11 +93,11 @@ export function Timeline() {
       {placed.length ? (
         <>
           <SectionLabel>Watch items</SectionLabel>
-          <div className="flex flex-col gap-2">
+          <CardGrid>
             {placed.map((p) => (
               <WatchItemRow key={p.item.id} placed={p} nowFrac={nowFrac} />
             ))}
-          </div>
+          </CardGrid>
         </>
       ) : (
         <EmptyState>No watch items are on file for this vehicle.</EmptyState>

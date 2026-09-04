@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useStore } from '../lib/store'
-import { Button, Card, ErrorText, SectionLabel } from '../components/ui'
+import { Button, Card, CardGrid, ErrorText, SectionLabel } from '../components/ui'
 import { longDate, miles, money, today } from '../lib/format'
 import { daysBetween } from '../lib/projection'
 import { statusFor, type DueStatus } from '../lib/schedule'
@@ -222,7 +222,7 @@ export function Warranty() {
       </p>
 
       {warranties.length ? (
-        <div className="flex flex-col gap-2">
+        <CardGrid>
           {warranties.map((w) => (
             <WarrantyCard
               key={w.id}
@@ -232,7 +232,7 @@ export function Warranty() {
               todayIso={todayIso}
             />
           ))}
-        </div>
+        </CardGrid>
       ) : (
         <Card>
           <p className="t-body text-text-2">No warranty is recorded on this vehicle.</p>

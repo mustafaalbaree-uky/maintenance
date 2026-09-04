@@ -66,7 +66,7 @@ to a set your own password screen.
   tasks, Receipts.
 - Deployed as an installable PWA.
 
-## Phase 2
+## Phase 2, complete
 
 **Timeline of watch items, built 4 Sep 2026.** `/timeline` lists every watch item on the
 vehicle, ordered by where its mileage window starts, each on its own segment of a shared
@@ -230,7 +230,33 @@ runtime on this machine to verify against the local Supabase stack directly.
 `BUILT_ROUTES` in `Onboarding.tsx` now includes `/budget`, so onboarding card 9 routes
 there instead of advancing past it.
 
-Not started: notifications, offline queue flush, PDF export, desktop density pass.
+**Desktop density pass, built 4 Sep 2026.** Above the `lg` breakpoint (1280 and up), the
+app now uses the width instead of a phone column stretched wide. `<main>` in `App.tsx`
+widens from `max-w-2xl` to `max-w-6xl` at `lg`, and a new `CardGrid` wrapper in
+`ui.tsx` lays a screen's list of cards into two or three columns at `lg` while staying
+the same single `flex flex-col` column below it. `items-start` on the grid keeps one card
+expanding (a Timeline or Symptoms row opening its detail) from stretching its row
+neighbors. Coming up, Receipts, Timeline, Symptoms and Warranty use two columns; Budget
+uses three, since it is four independent figures rather than a list read top to bottom.
+Charts and tables were not separately widened: `TrendlineChart`'s `ResponsiveContainer`
+already fills its card, so widening the card widened the chart with it.
+
+The desktop Sidebar (`App.tsx`) now lists all nine routes, `/timeline`, `/symptoms`,
+`/warranty` and `/budget` included, so every Phase 2 screen has a permanent way in rather
+than only through an onboarding card. `TabBar` and its underlying `TABS` array were left
+untouched: extending the same array would have pushed the phone's four item bottom bar to
+eight and broken it. The Sidebar reads from its own `SIDEBAR_LINKS` list instead.
+
+Below `lg`, nothing changed: no class on any screen's phone layout was touched, and every
+grid collapses to the same `flex flex-col gap-2` those screens already used.
+
+Verified with a Playwright render script covering all six screens at a phone width (390)
+and a desktop width (1440), against fixture data shaped like the real tables for every
+table each screen reads (`scripts/check-density-render.mjs`). It confirms each screen's
+heading renders at both widths, that `document.documentElement.scrollWidth` never exceeds
+`clientWidth` at either width (no horizontal scroll), and that the desktop Sidebar carries
+all four new links. Same fallback as the rest of Phase 2: no container runtime on this
+machine to verify against the local Supabase stack directly.
 
 ## Phase 3, not started
 

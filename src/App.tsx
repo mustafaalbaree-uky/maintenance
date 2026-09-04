@@ -25,6 +25,20 @@ const TABS = [
   { to: '/history', label: 'Receipts' },
 ]
 
+// The desktop sidebar carries every screen. TABS stays a fixed four items because
+// TabBar renders it into a hardcoded four column grid on the phone.
+const SIDEBAR_LINKS = [
+  { to: '/', label: 'Home' },
+  { to: '/coming-up', label: 'Coming up' },
+  { to: '/tasks', label: 'First things' },
+  { to: '/timeline', label: 'Timeline' },
+  { to: '/symptoms', label: 'Symptoms' },
+  { to: '/warranty', label: 'Warranty' },
+  { to: '/budget', label: 'Budget' },
+  { to: '/history', label: 'Receipts' },
+  { to: '/settings', label: 'Settings' },
+]
+
 function TabBar() {
   return (
     <nav className="tab-bar fixed inset-x-0 bottom-0 z-10 grid grid-cols-4 border-t border-line bg-ink lg:hidden">
@@ -48,7 +62,7 @@ function Sidebar() {
   return (
     <nav className="hidden w-[220px] shrink-0 flex-col gap-1 border-r border-line px-4 py-6 lg:flex">
       <p className="t-wordmark mb-8">Maintenance</p>
-      {[...TABS, { to: '/settings', label: 'Settings' }].map((t) => (
+      {SIDEBAR_LINKS.map((t) => (
         <NavLink
           key={t.to}
           to={t.to}
@@ -84,7 +98,7 @@ function Shell() {
     <div className="flex min-h-safe">
       <Sidebar />
       <div className="flex min-h-safe flex-1 flex-col">
-        <main className="mx-auto w-full max-w-2xl flex-1 pb-28 lg:pb-6">
+        <main className="mx-auto w-full max-w-2xl flex-1 pb-28 lg:max-w-6xl lg:pb-6">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/coming-up" element={<ComingUp />} />

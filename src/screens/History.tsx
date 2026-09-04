@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../lib/store'
-import { Button, Card, EmptyState } from '../components/ui'
+import { Button, Card, CardGrid, EmptyState } from '../components/ui'
 import { longDate, money } from '../lib/format'
 import type { Receipt, ServiceLog } from '../lib/types'
 
@@ -83,7 +83,7 @@ export function History() {
           description is one your warranty can't argue with.
         </EmptyState>
       ) : (
-        <div className="flex flex-col gap-2">
+        <CardGrid>
           {visits.map((visit) => {
             const first = visit.logs[0]
             const total = visit.receipt?.total_cost_cents ?? first.cost_cents
@@ -137,7 +137,7 @@ export function History() {
               </Card>
             )
           })}
-        </div>
+        </CardGrid>
       )}
     </div>
   )

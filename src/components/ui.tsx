@@ -96,6 +96,29 @@ export function SectionLabel({ children }: { children: ReactNode }) {
   return <h2 className="t-section mb-[9px]">{children}</h2>
 }
 
+/**
+ * Wraps a list of cards. On the phone it stays the single column it always was. From the
+ * desktop breakpoint up it lays the same cards into columns so a wide screen uses its
+ * width instead of a stretched phone column. `items-start` keeps one card expanding from
+ * stretching the height of its row neighbors.
+ */
+export function CardGrid({
+  children,
+  columns = 2,
+  className = '',
+}: {
+  children: ReactNode
+  columns?: 2 | 3
+  className?: string
+}) {
+  const cols = columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+  return (
+    <div className={`flex flex-col gap-2 lg:grid lg:items-start lg:gap-3 ${cols} ${className}`}>
+      {children}
+    </div>
+  )
+}
+
 /** Never "Nothing here yet." Name what will live there and why it matters. */
 export function EmptyState({
   children,

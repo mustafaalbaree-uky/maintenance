@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useStore } from '../lib/store'
 import { ScheduleRow } from '../components/ScheduleRow'
 import { TrendlineChart } from '../components/TrendlineChart'
-import { Card, SectionLabel } from '../components/ui'
+import { Card, CardGrid, SectionLabel } from '../components/ui'
 import { nextUpLine } from '../lib/schedule'
 
 export function ComingUp() {
@@ -18,11 +18,11 @@ export function ComingUp() {
       <h1 className="t-title mb-5">Coming up</h1>
 
       {pending.length ? (
-        <div className="flex flex-col gap-2">
+        <CardGrid>
           {pending.map((entry) => (
             <ScheduleRow key={entry.item.id} entry={entry} />
           ))}
-        </div>
+        </CardGrid>
       ) : (
         <Card>
           <p className="t-body text-text-2">{nextUpLine(next)}</p>
@@ -42,11 +42,11 @@ export function ComingUp() {
           {showAll ? (
             <div className="mt-4">
               <SectionLabel>Further out</SectionLabel>
-              <div className="flex flex-col gap-2">
+              <CardGrid>
                 {rest.map((entry) => (
                   <ScheduleRow key={entry.item.id} entry={entry} />
                 ))}
-              </div>
+              </CardGrid>
             </div>
           ) : null}
         </div>
