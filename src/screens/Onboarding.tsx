@@ -9,8 +9,8 @@ import { LogServiceForm } from './LogService'
 // Twelve cards, shown once, before the app is reachable. The tutorial is not
 // decorative: by the end he has entered his odometer and seen his first-week list.
 
-/** Routes that exist today. Phase 2 adds /timeline, /symptoms, and /budget. */
-const BUILT_ROUTES = new Set(['/coming-up', '/tasks', '/history'])
+/** Routes that exist today. Phase 2 still owes /symptoms and /budget. */
+const BUILT_ROUTES = new Set(['/coming-up', '/tasks', '/history', '/timeline'])
 
 export function Onboarding() {
   const { appState, setAppState } = useStore()
