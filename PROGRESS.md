@@ -3,7 +3,7 @@
 Working record of what is built, what is deliberately not, and what to pick up next.
 Update this in the same commit as the work it describes.
 
-Last updated: 16 Aug 2026.
+Last updated: 4 Sep 2026.
 
 ---
 
@@ -66,14 +66,32 @@ to a set your own password screen.
   tasks, Receipts.
 - Deployed as an installable PWA.
 
-## Phase 2, not started
+## Phase 2
 
-Trendline chart, Timeline of watch items, Warranty screen including the unresolved MaxCare
-cap prompt, Symptom lookup, desktop density pass.
+**Timeline of watch items, built 4 Sep 2026.** `/timeline` lists every watch item on the
+vehicle, ordered by where its mileage window starts, each on its own segment of a shared
+axis running from the purchase odometer forward. A marker on every segment shows the
+current odometer, so a glance says whether the car is ahead of, inside, or past each
+window. Cost figures only render where the seed data has them; the rest render without
+that line rather than inventing one. Reuses `useStore` and the existing card and
+typography language, no new colors. `BUILT_ROUTES` in `Onboarding.tsx` now includes it,
+so the onboarding card that promises the timeline now routes there instead of advancing
+past it.
 
-Onboarding cards 7, 8 and 9 point at `/timeline`, `/symptoms` and `/budget`. Until those
-routes exist the cards advance instead of routing. `BUILT_ROUTES` in `Onboarding.tsx` is
-the switch. **Add each route there as it ships.**
+Verified with unit tests on the placement math (`src/lib/timeline.test.ts`, purchase to
+plan end range, window position relative to the current odometer, fraction clamping) and
+a Playwright render against the local dev server with every Supabase call intercepted and
+answered from fixture data shaped like the real tables (`scripts/check-timeline-render.mjs`).
+The local Supabase stack could not be started to verify against it directly: no container
+runtime was running on this machine (`docker ps` failed with no daemon socket), so this
+is the fallback the repo's own verification section already allows for.
+
+Not started: Trendline chart, Warranty screen including the unresolved MaxCare cap
+prompt, Symptom lookup, desktop density pass.
+
+Onboarding cards 8 and 9 point at `/symptoms` and `/budget`. Until those routes exist the
+cards advance instead of routing. `BUILT_ROUTES` in `Onboarding.tsx` is the switch. **Add
+each route there as it ships.**
 
 ## Phase 3, not started
 

@@ -97,6 +97,7 @@ supabase/seed.sql       templates, watch items, symptoms
 Phase 1 is built: auth, vehicle creation, onboarding, odometer entry with the adaptive
 projection, Coming up, service logging with receipt capture, tasks, and history.
 
-Phase 2 onward is not built: the trendline chart, timeline, warranty screen with the
-unresolved MaxCare cap prompt, symptom lookup, notifications, and budget. Three onboarding
+Phase 2 has the timeline of watch items. The rest of it is not built: the trendline chart,
+warranty screen with the unresolved MaxCare cap prompt, symptom lookup, notifications, and
+budget. Three onboarding
 cards point at those screens and currently advance instead of routing.
