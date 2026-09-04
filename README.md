@@ -89,6 +89,7 @@ src/lib/schedule.ts     due status for each maintenance item
 src/lib/timeline.ts     watch item placement on the mileage axis, pure, unit tested
 src/lib/trendline.ts    projected and actual cumulative cost series, pure, unit tested
 src/lib/symptoms.ts     symptom search and its related watch item, pure, unit tested
+src/lib/warranty.ts     warranty cap math, both readings until the basis is recorded, pure, unit tested
 src/lib/store.tsx       session, vehicle, and derived state
 src/content/            onboarding copy, kept out of JSX so template sets can branch
 supabase/migrations/    schema, RLS, grants, provisioning function
@@ -101,6 +102,8 @@ Phase 1 is built: auth, vehicle creation, onboarding, odometer entry with the ad
 projection, Coming up, service logging with receipt capture, tasks, and history.
 
 Phase 2 has the timeline of watch items, the cost over ownership trendline on Coming up,
-and the symptom lookup at `/symptoms`. The rest of it is not built: the warranty screen
-with the unresolved MaxCare cap prompt, notifications, and budget. One onboarding card
-points at budget and currently advances instead of routing.
+the symptom lookup at `/symptoms`, and the warranty screen at `/warranty`. The MaxCare
+75,000 mile cap is still unresolved there: the screen shows both readings, total odometer
+and since purchase, side by side until CarMax answers, and a form on the screen records
+the answer once it does. The rest of Phase 2 is not built: notifications and budget. One
+onboarding card points at budget and currently advances instead of routing.

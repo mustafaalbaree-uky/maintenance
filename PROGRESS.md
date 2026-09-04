@@ -155,8 +155,50 @@ against the local Supabase stack directly.
 `BUILT_ROUTES` in `Onboarding.tsx` now includes `/symptoms`, so onboarding card 8 routes
 there instead of advancing past it.
 
-Not started: Warranty screen including the unresolved MaxCare cap prompt, budget,
-desktop density pass.
+**Warranty screen, built 4 Sep 2026.** `/warranty` lists both provisioned warranty rows.
+Each card shows what it covers and excludes from the seed's `notes` text, the deductible
+figures where the row has them, and the current odometer's position against every
+mileage or date cap the row carries. The current odometer is the last logged reading
+(`estimate.latest.miles`), not the adaptive projection Timeline and Home show, since a
+warranty cap is a contractual fact to check against a receipt rather than an
+extrapolation. It falls back to the purchase odometer, a real measurement, when no
+reading has been logged.
+
+MaxCare's 75,000 mile cap stays unresolved: `warranty.cap_is_total_odometer` is null in
+the seed, so the card shows both readings side by side, "if total odometer" and "if since
+purchase," each against the current odometer, rather than picking one. **This is still an
+open question**, waiting on CarMax to answer the "First week" task already in the seed.
+The factory warranty's basis was already known at seed time (`cap_is_total_odometer:
+true`), so it shows one mileage cap line plus its date cap, which stays blank until the
+in service date is recorded.
+
+A form under the MaxCare card records the answer once it comes back: total odometer or
+since purchase, plus the date CarMax answered. Recording writes
+`cap_is_total_odometer`, `starts_from_odometer` (the purchase odometer, only for a since
+purchase answer), and the new `cap_basis_recorded_at` date onto the warranty row, and the
+card collapses from two readings to the one the answer resolved to. `starts_from_odometer`
+already existed on the table for exactly this; `cap_basis_recorded_at` did not, so
+`supabase/migrations/20260904000100_warranty_basis_recorded.sql` adds it, applied to the
+linked project with `supabase db query --linked -f`.
+
+The math (`src/lib/warranty.ts`: `capEndpoints`, `resolvedCapMiles`, `milesUntilCap`) is
+pure and unit tested (`src/lib/warranty.test.ts`), same shape as `timeline.ts` and
+`symptoms.ts`. Reuses `Card`, `SectionLabel`, `Button`, `ErrorText`, `useStore`, and
+`statusFor` from `schedule.ts` for the overdue and due soon coloring, so a warranty a
+person is about to run out on reads the same as a maintenance item that is.
+
+Verified with unit tests on the cap math and a Playwright render against the local dev
+server with Supabase intercepted and answered from fixture data, including a PATCH
+handler that mutates the fixture in place so the render script can pick "since purchase,"
+submit, and confirm the card actually collapses to one cap line
+(`scripts/check-warranty-render.mjs`). Same fallback as the rest of Phase 2: no
+container runtime on this machine to verify against the local Supabase stack directly.
+
+No onboarding card names `/warranty`, so it is not in `BUILT_ROUTES` and there is no in
+app link to it yet, matching how `/timeline` and `/symptoms` are also only reachable
+through their onboarding cards or a direct URL today.
+
+Not started: budget, notifications, desktop density pass.
 
 Onboarding card 9 points at `/budget`. Until that route exists the card advances instead
 of routing. `BUILT_ROUTES` in `Onboarding.tsx` is the switch. **Add the route there as it
